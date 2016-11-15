@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers sources\common">
+      <UniqueIdentifier>{3dac8bb4-7cb3-403d-aa6e-1ce403f82361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\common">
+      <UniqueIdentifier>{860efaee-03f5-4128-b5f8-ae5818ac8277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\gl3w">
+      <UniqueIdentifier>{7b4a22b1-6c33-41d0-a7bd-699debd72585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\imgui">
+      <UniqueIdentifier>{be826276-dbf2-44a2-a5c8-6e859b3a31ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\shaders">
+      <UniqueIdentifier>{86ea37fa-f21b-4389-8741-cef708dbcab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\glfw">
+      <UniqueIdentifier>{ce267abc-0eea-42ee-9b0d-d89116c25445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\gl3w">
+      <UniqueIdentifier>{bf399358-daf0-4ac4-8604-acb2da0eb3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\imgui">
+      <UniqueIdentifier>{814024ec-6fc0-43e6-801a-cb1346d73280}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,6 +48,42 @@
     <ClInclude Include="targetver.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\imgui_impl_glfw_gl3.h">
+      <Filter>Fichiers d%27en-tête\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\ShaderManager.h">
+      <Filter>Fichiers d%27en-tête\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\glfw\include\GLFW\glfw3.h">
+      <Filter>Fichiers d%27en-tête\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\glfw\include\GLFW\glfw3native.h">
+      <Filter>Fichiers d%27en-tête\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\gl3w\GL\gl3w.h">
+      <Filter>Fichiers d%27en-tête\gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\gl3w\GL\glcorearb.h">
+      <Filter>Fichiers d%27en-tête\gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\imconfig.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\imgui.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\imgui_internal.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\stb_rect_pack.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\stb_textedit.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\imgui\stb_truetype.h">
+      <Filter>Fichiers d%27en-tête\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,5 +92,31 @@
     <ClCompile Include="VoxelWorldApp.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\imgui_impl_glfw_gl3.cpp">
+      <Filter>Fichiers sources\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\ShaderManager.cpp">
+      <Filter>Fichiers sources\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\gl3w\GL\gl3w.c">
+      <Filter>Fichiers sources\gl3w</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\imgui\imgui.cpp">
+      <Filter>Fichiers sources\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\imgui\imgui_demo.cpp">
+      <Filter>Fichiers sources\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\imgui\imgui_draw.cpp">
+      <Filter>Fichiers sources\imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\simple.fs">
+      <Filter>Fichiers sources\shaders</Filter>
+    </None>
+    <None Include="..\shaders\simple.vs">
+      <Filter>Fichiers sources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
