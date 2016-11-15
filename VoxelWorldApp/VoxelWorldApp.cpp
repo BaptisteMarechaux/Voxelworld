@@ -21,6 +21,14 @@ int width, height;
 int nbFrames = 0;
 double lastTime = 0.0f;
 
+struct Transform {
+	glm::vec4 translation;
+	glm::vec4 rotation;
+	glm::vec4 scale;
+};
+
+Transform transform;
+
 GLfloat g_vertex_buffer_data[] = {
 	-1.0f,-1.0f,-1.0f, // triangle 1 : begin
 	-1.0f,-1.0f, 1.0f,
