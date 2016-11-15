@@ -1,10 +1,14 @@
+#version 330 core
+
+layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 1) in vec3 vertexColor;
+
+out vec3 fragmentColor;
+
 uniform mat4 MVP;
-attribute vec3 color_in;
-attribute vec2 position;
-varying vec3 color_out;
 
 void main()
 {
-    gl_Position = MVP * vec4(position, 0.0, 1.0);
-    color_out = color_in;
+    gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
+	fragmentColor = vertexColor;
 }
