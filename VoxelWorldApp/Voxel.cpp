@@ -4,6 +4,7 @@
 
 Voxel::Voxel()
 {
+	transform = VTransform();
 }
 
 
