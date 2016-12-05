@@ -163,9 +163,11 @@
     <ClInclude Include="..\libs\imgui\stb_rect_pack.h" />
     <ClInclude Include="..\libs\imgui\stb_textedit.h" />
     <ClInclude Include="..\libs\imgui\stb_truetype.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Voxel.h" />
+    <ClInclude Include="VTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\imgui_impl_glfw_gl3.cpp" />
@@ -174,9 +176,11 @@
     <ClCompile Include="..\libs\imgui\imgui.cpp" />
     <ClCompile Include="..\libs\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="VoxelWorldApp.cpp" />
+    <ClCompile Include="VTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\simple.fs" />

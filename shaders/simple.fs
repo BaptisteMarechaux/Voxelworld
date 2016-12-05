@@ -1,9 +1,10 @@
 #version 330 core
 
 // Notice that the "1" here equals the "1" in glVertexAttribPointer
-in vec3 fragmentColor;
+in vec4 fragmentColor;
+//uniform vec4 fragmentColor;
 
-out vec3 color;
+out vec4 color;
 
 void main()
 {

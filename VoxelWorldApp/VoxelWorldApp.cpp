@@ -20,6 +20,7 @@ GLuint MatrixID; //MVP Matrix
 int width, height;
 int nbFrames = 0;
 double lastTime = 0.0f;
+GLfloat fragmentColor[4] = { 1, 0, 0, 1 };
 
 struct Transform {
 	glm::vec4 translation;
@@ -128,19 +129,15 @@ void Render()
 
 	glUseProgram(program);
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, /*glm::value_ptr(mvp)*/&mvp[0][0]);
+	glProgramUniform4fv(program, color_location, 1, fragmentColor);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
 	glVertexAttribPointer(0, 3 , GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 	//std::cout << vertexBufferPoints << std::endl;
 	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
 }
 
 void Initialize()
@@ -174,6 +171,7 @@ void Initialize()
 
 	MatrixID = glGetUniformLocation(program, "MVP");
 	position_location = glGetAttribLocation(program, "position");
+	color_location = glGetUniformLocation(program, "vertexColor");
 
 
 	glGenVertexArrays(1, &vaoPoints);
@@ -182,10 +180,6 @@ void Initialize()
 	glGenBuffers(1, &vertexBufferPoints);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-	glGenBuffers(1, &colorbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(position_location);
 	glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)0);
