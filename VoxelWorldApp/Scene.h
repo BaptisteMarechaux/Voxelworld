@@ -16,10 +16,16 @@ class Scene
 private:
 	std::list<Voxel*> voxelItems;
 	glm::mat4 model, proj, mvp, view;
-	GLuint MatrixID; //MVP Matrix
+	GLuint MatrixID, VertexArrayID; //MVP Matrix
 	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
 	GLuint vertexBufferPoints;
-	std::vector<GLfloat> g_vertex_buffer_data;
+	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
+	GLuint uvbuffer, normalbuffer;
+	std::vector<glm::vec3> g_vertex_buffer_data;
+	std::vector<GLuint> indices;
+
+	GLuint program;
+	GLuint position_location, color_location, mvp_location, light_location;
 
 public:
 	Scene();
@@ -28,7 +34,8 @@ public:
 	void Initialize();
 	void Render();
 	void Update();
-	void AddVoxelAtPosition(glm::vec3 pos, GLint program);
+	void UpdateBuffer(GLint* buffer);
+	void AddVoxelAtPosition(glm::vec3 pos);
 	void TranslateCamera(glm::vec3 v);
 };
 

@@ -9,9 +9,8 @@
 class Voxel
 {
 private:
-	std::vector<GLfloat> points; //chaque int devra laisser place à 2 00 à la fin pour la partie flotante
+	std::vector<glm::vec3> points; //chaque int devra laisser place à 2 00 à la fin pour la partie flotante
 	//Exemple 200 équivaut donc à 2.00, 3005 équivaut à 30.05
-	
 public:
 	GLint program;
 	GLuint position_location, color_location, mvp_location;
@@ -25,6 +24,7 @@ public:
 	~Voxel();
 
 	void SetPosition(glm::vec3 pos);
-	std::vector<GLfloat> getPoints();
+	std::vector<glm::vec3> getPoints();
+	std::vector<GLuint> getIndices();
 };
 

@@ -25,8 +25,6 @@ GLfloat fragmentColor[4] = { 1, 0, 0, 1 };
 
 Scene *mainScene;
 
-
-
 static void error_callback(int error, const char* description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
@@ -58,6 +56,7 @@ void Render()
 	//std::cout << vertexBufferPoints << std::endl;
 	glDisableVertexAttribArray(0);
 	*/
+	mainScene->Render();
 }
 
 void Initialize()
@@ -83,10 +82,6 @@ void Initialize()
 	// Setup ImGui binding
 	ImGui_ImplGlfwGL3_Init(window, true);
 
-	glEnable(GL_CULL_FACE);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
-
 	mainScene = new Scene();
 
 }
@@ -95,6 +90,7 @@ int main(int, char**)
 {
 	bool show_test_window = true;
 	bool reset = false;
+	bool addAVoxel = false;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
@@ -118,6 +114,8 @@ int main(int, char**)
 		ImGui::Columns(1);
 		ImGui::Separator();
 
+		if (ImGui::Button("Add A Voxel")) addAVoxel ^= 1;
+
 		if (ImGui::Button("Reset")) reset ^= 1;
 		ImGui::ColorEdit3("Clear color", (float*)&clear_color);
 		if (ImGui::Button("Test Window")) show_test_window ^= 1;
@@ -139,6 +137,12 @@ int main(int, char**)
 		{
 			ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
 			ImGui::ShowTestWindow(&show_test_window);
+		}
+
+		if (addAVoxel)
+		{
+			mainScene->AddVoxelAtPosition(glm::vec3(0, 0, 0));
+			addAVoxel = false;
 		}
 
 		// Rendering
