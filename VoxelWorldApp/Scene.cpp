@@ -43,7 +43,7 @@ void Scene::Initialize()
 void Scene::Render()
 {
 	int xpos, ypos;
-
+	
 	input.computeMatrixes(&proj, &view, &model);
 	
 	glUseProgram(program);
@@ -88,7 +88,7 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 	std::vector<GLuint> voxelIndices = voxel->getIndices(indices.size());
 	indices.insert(indices.end(), voxelIndices.begin(), voxelIndices.end());
 
-	Update();
+	UpdateBuffers();
 
 	std::cout << "Scene Added at Position : " << pos.x << " " << pos.y << " " << pos.z << std::endl;
 	std::cout << "Vertex Buffer Size : " << g_vertex_buffer_data.size() << std::endl;
@@ -101,4 +101,9 @@ void Scene::TranslateCamera(glm::vec3 v)
 int Scene::getVertexCount()
 {
 	return g_vertex_buffer_data.size();
+}
+
+void Scene::computeMatrixes(glm::mat4 * projection, glm::mat4 * view, glm::mat4 * model, int winWidth, int winHeight)
+{
+
 }

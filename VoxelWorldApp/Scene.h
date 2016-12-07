@@ -49,5 +49,6 @@ public:
 	void AddVoxelAtPosition(glm::vec3 pos);
 	void TranslateCamera(glm::vec3 v);
 	int getVertexCount();
+	void computeMatrixes(glm::mat4* projection, glm::mat4* view, glm::mat4* model, int winWidth, int winHeight);
 };
 

@@ -25,10 +25,23 @@ GLfloat fragmentColor[4] = { 1, 0, 0, 1 };
 float newVoxelPosition[3];
 
 Scene *mainScene;
+double mouseX, mouseY;
 
 static void error_callback(int error, const char* description)
 {
 	fprintf(stderr, "Error %d: %s\n", error, description);
+}
+
+void callbackMousePos(GLFWwindow* window, int button, int action, int mods)
+{
+
+}
+
+void callbackMouseMove(GLFWwindow* window, double x, double y)
+{
+
+	mouseX = x;
+	mouseY = y;
 }
 
 void Render() 
