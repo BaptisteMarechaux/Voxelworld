@@ -58,6 +58,14 @@ Voxel::~Voxel()
 void Voxel::SetPosition(glm::vec3 pos)
 {
 	transform.position = pos;
+	for (unsigned int i = 0; i < points.size(); i++)
+	{
+		glm::mat4 myMatrix = glm::translate(transform.position);
+		glm::vec4 myVec(points[i].x, points[i].y, points[i].z, 1);
+		glm::vec4 transformedVector = myMatrix * myVec;
+		points[i] = glm::vec3(transformedVector.x, transformedVector.y, transformedVector.z);
+	}
+		
 }
 
 std::vector<glm::vec3> Voxel::getPoints()

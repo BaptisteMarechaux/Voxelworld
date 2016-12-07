@@ -66,7 +66,7 @@ void Initialize()
 	height = 720;
 
 	glfwSetErrorCallback(error_callback);
-	
+
 	//Initialisation de GLFW
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
@@ -84,6 +84,10 @@ void Initialize()
 
 	mainScene = new Scene();
 
+}
+
+float frand_a_b(float a, float b) {
+	return (rand() / (float)RAND_MAX) * (b - a) + a;
 }
 
 int main(int, char**)
@@ -131,6 +135,8 @@ int main(int, char**)
 		ImGui::Text("FPS Counter");
 		ImGui::Separator();
 		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Separator();
+		ImGui::Text("Vertex Count : %d", mainScene->getVertexCount());
 		ImGui::End();
 
 		if (show_test_window)
@@ -141,7 +147,8 @@ int main(int, char**)
 
 		if (addAVoxel)
 		{
-			mainScene->AddVoxelAtPosition(glm::vec3(0, 0, 0));
+			glm::vec3 pos = glm::vec3(frand_a_b(-3, 3), frand_a_b(-3, 3), frand_a_b(-3, 3));
+			mainScene->AddVoxelAtPosition(pos);
 			addAVoxel = false;
 		}
 

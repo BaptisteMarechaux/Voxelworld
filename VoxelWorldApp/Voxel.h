@@ -5,6 +5,7 @@
 #include <gl3w\GL\gl3w.h>
 #include <glfw\include\GLFW\glfw3.h>
 #include "ShaderManager.h"
+#include <glm\glm\gtx\transform.hpp>
 
 class Voxel
 {

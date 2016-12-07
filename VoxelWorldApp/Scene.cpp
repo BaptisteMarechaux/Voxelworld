@@ -7,7 +7,7 @@ Scene::Scene()
 	model = glm::mat4(1.0);
 	proj = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f);
 	view = glm::lookAt(
-		glm::vec3(4, 3, -3), // Camera is at (4,3,-3), in World Space
+		glm::vec3(4, 3, -10), // Camera is at (4,3,-3), in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);
@@ -35,8 +35,7 @@ void Scene::Initialize()
 	position_location = glGetAttribLocation(program, "position");
 	color_location = glGetUniformLocation(program, "vertexColor");
 	
-	AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser soit cette ligne soit la fonction Update
-
+	//AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser cette ligne pour instancier un voxel. il fera appel à la fonction Update pour mettre a jour les buffers de la scene la scene
 }
 
 void Scene::Render()
@@ -47,22 +46,6 @@ void Scene::Render()
 	glUseProgram(program);
 	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
 	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
-	/*for (; vox != voxelItems.end(); ++vox)
-	{
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		glDrawElements(
-			GL_TRIANGLES,
-			indices.size(), //Count
-			GL_UNSIGNED_INT, //Type
-			(void*)i // Element Array buffer offset
-		);
-		glDisableVertexAttribArray(0);
-		//glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-		i+=(*vox)->getIndices().size();
-	}*/
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -110,4 +93,9 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 
 void Scene::TranslateCamera(glm::vec3 v)
 {
+}
+
+int Scene::getVertexCount()
+{
+	return g_vertex_buffer_data.size();
 }
