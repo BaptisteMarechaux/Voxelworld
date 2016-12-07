@@ -22,6 +22,7 @@ int width, height;
 int nbFrames = 0;
 double lastTime = 0.0f;
 GLfloat fragmentColor[4] = { 1, 0, 0, 1 };
+float newVoxelPosition[3];
 
 Scene *mainScene;
 
@@ -117,9 +118,11 @@ int main(int, char**)
 
 		ImGui::Columns(1);
 		ImGui::Separator();
-
+		ImGui::Text("Add a Voxel");
+		ImGui::DragFloat3("Position", (float*)&newVoxelPosition);
 		if (ImGui::Button("Add A Voxel")) addAVoxel ^= 1;
 
+		ImGui::Separator();
 		if (ImGui::Button("Reset")) reset ^= 1;
 		ImGui::ColorEdit3("Clear color", (float*)&clear_color);
 		if (ImGui::Button("Test Window")) show_test_window ^= 1;
@@ -147,7 +150,7 @@ int main(int, char**)
 
 		if (addAVoxel)
 		{
-			glm::vec3 pos = glm::vec3(frand_a_b(-3, 3), frand_a_b(-3, 3), frand_a_b(-3, 3));
+			glm::vec3 pos = glm::vec3(newVoxelPosition[0], newVoxelPosition[1], newVoxelPosition[2]);
 			mainScene->AddVoxelAtPosition(pos);
 			addAVoxel = false;
 		}

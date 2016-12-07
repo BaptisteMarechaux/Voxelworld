@@ -42,8 +42,6 @@ void Scene::Initialize()
 
 void Scene::Render()
 {
-	int xpos, ypos;
-
 	input.computeMatrixes(&proj, &view, &model);
 	
 	glUseProgram(program);
@@ -65,7 +63,7 @@ void Scene::Render()
 
 }
 
-void Scene::UpdateBuffers()
+void Scene::Update()
 {
 	glGenBuffers(1, &vertexBufferPoints);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);

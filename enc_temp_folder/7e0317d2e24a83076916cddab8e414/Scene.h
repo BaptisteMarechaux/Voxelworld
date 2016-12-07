@@ -45,7 +45,8 @@ public:
 
 	void Initialize();
 	void Render();
-	void UpdateBuffers();
+	void Update();
+	void UpdateBuffer(GLint* buffer);
 	void AddVoxelAtPosition(glm::vec3 pos);
 	void TranslateCamera(glm::vec3 v);
 	int getVertexCount();

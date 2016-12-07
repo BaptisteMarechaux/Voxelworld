@@ -27,5 +27,7 @@ public:
 	void SetPosition(glm::vec3 pos);
 	std::vector<glm::vec3> getPoints();
 	std::vector<GLuint> getIndices();
+
+	std::vector<GLuint> getIndices(int indicesSize);
 };
 

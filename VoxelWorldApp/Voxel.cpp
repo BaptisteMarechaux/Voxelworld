@@ -104,3 +104,35 @@ std::vector<GLuint> Voxel::getIndices()
 
 	return indices;
 }
+
+std::vector<GLuint> Voxel::getIndices(int indicesSize)
+{
+	std::vector<GLuint> indices = std::vector<GLuint>();
+	std::vector<glm::vec3> out = std::vector<glm::vec3>();
+	bool found = false;
+	GLuint indexFound;
+	for (unsigned int i = 0; i < points.size(); i++)
+	{
+		for (unsigned int j = 0; j < out.size(); j++)
+		{
+			if (points[i] == out[j])
+			{
+				found = true;
+				indexFound = indices[j];
+				break;
+			}
+		}
+		if (found)
+		{
+			indices.push_back(i+indicesSize);
+		}
+		else
+		{
+			out.push_back(points[i]);
+			indices.push_back(i+indicesSize);
+		}
+		found = false;
+	}
+
+	return indices;
+}
