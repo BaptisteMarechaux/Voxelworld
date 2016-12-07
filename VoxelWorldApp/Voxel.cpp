@@ -11,43 +11,48 @@ Voxel::Voxel()
 	//color_location = glGetUniformLocation(program, "vertexColor");
 
 	points = {
-		glm::vec3(-1.0f,-1.0f,-1.0f), // triangle 1 : begin
-		glm::vec3(-1.0f,-1.0f, 1.0f),
-		glm::vec3(-1.0f, 1.0f, 1.0f), // triangle 1 : end
-		glm::vec3(1.0f, 1.0f,-1.0f), // triangle 2 : begin
-		glm::vec3(-1.0f,-1.0f,-1.0f),
-		glm::vec3(-1.0f, 1.0f,-1.0f), // triangle 2 : end
-		glm::vec3(1.0f,-1.0f, 1.0f),
-		glm::vec3(-1.0f,-1.0f,-1.0f),
-		glm::vec3(1.0f,-1.0f,-1.0f),
-		glm::vec3(1.0f, 1.0f,-1.0f),
-		glm::vec3(1.0f,-1.0f,-1.0f),
-		glm::vec3(-1.0f,-1.0f,-1.0f),
-		glm::vec3(-1.0f,-1.0f,-1.0f),
-		glm::vec3(-1.0f, 1.0f, 1.0f),
-		glm::vec3(-1.0f, 1.0f,-1.0f),
-		glm::vec3(1.0f,-1.0f, 1.0f),
-		glm::vec3(-1.0f,-1.0f, 1.0f),
-		glm::vec3(-1.0f,-1.0f,-1.0f),
-		glm::vec3(-1.0f, 1.0f, 1.0f),
-		glm::vec3(-1.0f,-1.0f, 1.0f),
-		glm::vec3(1.0f,-1.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f,-1.0f,-1.0f),
-		glm::vec3(1.0f, 1.0f,-1.0f),
-		glm::vec3(1.0f,-1.0f,-1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f,-1.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f,-1.0f),
-		glm::vec3(-1.0f, 1.0f,-1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(-1.0f, 1.0f,-1.0f),
-		glm::vec3(-1.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		glm::vec3(-1.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f,-1.0f, 1.0f)
+		glm::vec3(-0.5f,-0.5f,-0.5f), // triangle 1 : begin
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f), // triangle 1 : end
+		glm::vec3(0.5f, 0.5f,-0.5f), // triangle 2 : begin
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f), // triangle 2 : end
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f)
 	};
+
+	for (unsigned int i = 0; i < points.size(); i+=3)
+	{
+		normals.push_back( glm::normalize(glm::cross(glm::vec3(points[i+1]-points[i]), glm::vec3(points[i+2]-points[i+1]))) );
+	}
 }
 
 
@@ -103,6 +108,11 @@ std::vector<GLuint> Voxel::getIndices()
 	}
 
 	return indices;
+}
+
+std::vector<glm::vec3> Voxel::getNormals()
+{
+	return normals;
 }
 
 std::vector<GLuint> Voxel::getIndices(int indicesSize)
