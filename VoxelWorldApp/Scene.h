@@ -17,7 +17,7 @@ class Scene
 private:
 	std::list<Voxel*> voxelItems;
 	glm::mat4 model, proj, mvp, view;
-	GLuint MatrixID, VertexArrayID, LightID;
+	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID;
 	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
 	GLuint vertexBufferPoints;
 	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels

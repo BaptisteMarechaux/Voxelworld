@@ -32,6 +32,8 @@ void Scene::Initialize()
 
 	program = LoadShaders("..\\shaders\\simple.vs", "..\\shaders\\simple.fs");
 	mvp_location = glGetUniformLocation(program, "MVP");
+	ModelMatrixID = glGetUniformLocation(program, "M");
+	ViewMatrixID = glGetUniformLocation(program, "V");
 	position_location = glGetAttribLocation(program, "position");
 	color_location = glGetUniformLocation(program, "vertexColor");
 	LightID = glGetUniformLocation(program, "lightPos");
@@ -43,6 +45,8 @@ void Scene::Render()
 	
 	glUseProgram(program);
 	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
+	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
 	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
 	glProgramUniform4fv(program, LightID, 1, lightPos);
 
