@@ -28,7 +28,7 @@ private:
 	GLuint program;
 	GLuint position_location, color_location, mvp_location, light_location;
 
-	float lightPos[3] = { 4, 4, 4 };
+	float lightPos[3] = { 1, 1, 1 };
 
 	Input input;
 
