@@ -75,10 +75,8 @@ void Scene::Render()
 
 	glBindVertexArray(VertexArrayID);
 	glPointSize(5);
-
-	glDrawElements(GL_LINE_STRIP, indices.size(), GL_UNSIGNED_INT, 0);
-
-	//glDisableVertexAttribArray(0);
+	glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 }
 
@@ -133,7 +131,7 @@ void Scene::TranslateCamera(glm::vec3 v)
 
 int Scene::getVertexCount()
 {
-	return g_vertex_buffer_data.size();
+	return indices.size();
 }
 
 void Scene::computeMatrixes(int winWidth, int winHeight, double xPos, double yPos)

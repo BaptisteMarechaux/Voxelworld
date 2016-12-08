@@ -50,8 +50,6 @@ Voxel::Voxel()
 		}
 		normals.push_back(glm::normalize(pointNormal));
 	}
-
-	std::cout << "Added new Voxel" << std::endl;
 }
 
 
