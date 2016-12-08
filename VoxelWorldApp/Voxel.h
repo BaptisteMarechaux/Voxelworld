@@ -17,7 +17,7 @@ public:
 	GLint program;
 	GLuint position_location, color_location, mvp_location;
 	VTransform transform;
-	Voxel(int indicesSize=0);
+	Voxel();
 	Voxel(GLint _program, glm::vec3 position) : program(_program)
 	{
 		transform = VTransform(position, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));

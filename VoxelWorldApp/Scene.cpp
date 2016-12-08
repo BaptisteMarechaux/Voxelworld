@@ -3,7 +3,7 @@
 Scene::Scene()
 {
 	model = glm::mat4(1.0);
-	proj = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f);
+	proj = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 1000.0f);
 	view = glm::lookAt(
 		glm::vec3(4, 3, 10), // Camera is at this position, in World Space
 		glm::vec3(0, 0, 0), // and looks at the origin
@@ -39,40 +39,12 @@ void Scene::Initialize()
 	color_location = glGetUniformLocation(program, "vertexColor");
 	LightID = glGetUniformLocation(program, "lightPos");
 	//AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser cette ligne pour instancier un voxel. il fera appel à la fonction Update pour mettre a jour les buffers de la scene la scene
-}
-
-void Scene::Render()
-{
-	
-	glUseProgram(program);
-	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
-	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
-	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
-	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
-	glProgramUniform4fv(program, LightID, 1, lightPos);
-
-	glBindVertexArray(VertexArrayID);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-
-	//glDisableVertexAttribArray(0);
-
-}
-
-void Scene::UpdateBuffers()
-{
-	glGenBuffers(1, &vertexBufferPoints);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(glm::vec3), &g_vertex_buffer_data[0], GL_STATIC_DRAW);
-
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-	
-	glGenBuffers(1, &voxelElementBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
 	glGenVertexArrays(1, &VertexArrayID);
+	glGenBuffers(1, &vertexBufferPoints);
+	glGenBuffers(1, &normalbuffer);
+	glGenBuffers(1, &voxelElementBuffer);
+
 	glBindVertexArray(VertexArrayID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
@@ -91,15 +63,48 @@ void Scene::UpdateBuffers()
 
 }
 
+void Scene::Render()
+{
+	
+	glUseProgram(program);
+	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
+	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
+	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
+	glProgramUniform4fv(program, LightID, 1, lightPos);
+
+	glBindVertexArray(VertexArrayID);
+	glPointSize(5);
+
+	glDrawElements(GL_LINE_STRIP, indices.size(), GL_UNSIGNED_INT, 0);
+
+	//glDisableVertexAttribArray(0);
+
+}
+
+void Scene::UpdateBuffers()
+{
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+}
+
 void Scene::AddVoxelAtPosition(glm::vec3 pos)
 {
-	Voxel* voxel = new Voxel(indices.size());
+	Voxel* voxel = new Voxel();
 	voxel->SetPosition(pos);
 
 	std::vector<glm::vec3> points = voxel->getPoints();
 	g_vertex_buffer_data.insert(g_vertex_buffer_data.end(), points.begin(), points.end());
 
-	std::vector<GLuint> voxelIndices = voxel->getIndices();
+	std::vector<GLuint> voxelIndices = voxel->getIndices(indices.size());
 	indices.insert(indices.end(), voxelIndices.begin(), voxelIndices.end());
 
 	std::vector<glm::vec3> voxelNormals = voxel->getNormals();
