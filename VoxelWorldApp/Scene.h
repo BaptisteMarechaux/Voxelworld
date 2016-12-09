@@ -15,7 +15,7 @@
 class Scene
 {
 private:
-	std::list<Voxel*> voxelItems;
+	std::vector<Voxel*> voxelItems;
 	glm::mat4 model, proj, mvp, view;
 	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID;
 	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
@@ -31,6 +31,9 @@ private:
 	float lightPos[3] = { 1, 1, 1 };
 
 	Input input;
+
+	std::vector<glm::vec3> computedVertices, computedNormals;
+	std::vector<GLuint> computedIndices;
 
 	//Camera management
 	glm::vec3 camPosition = glm::vec3(4, 3, 10);
