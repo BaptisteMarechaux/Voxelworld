@@ -62,13 +62,13 @@ void Scene::Initialize()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	glBufferData(GL_ARRAY_BUFFER, 1800 * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 400 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 1800 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 }
 
@@ -85,32 +85,25 @@ void Scene::Render()
 	glBindVertexArray(VertexArrayID);
 	glPointSize(5);
 	//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, voxelItems.size());
+	glDrawElementsInstanced(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0, voxelItems.size());
 	glBindVertexArray(0);
 
 }
 
 void Scene::UpdateBuffers()
 {
-
+	glBindVertexArray(VertexArrayID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	//glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
-	std::vector<glm::vec3>* pts = (std::vector<glm::vec3>*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	pts = &computedVertices;
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	//glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-	std::vector<glm::vec3>* nml = (std::vector<glm::vec3>*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	nml = &computedNormals;
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-	std::vector<GLuint>* ind = (std::vector<GLuint>*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	ind = &computedIndices;
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
+	glBindVertexArray(0);
 }
 
 void Scene::AddVoxelAtPosition(glm::vec3 pos)
@@ -119,16 +112,16 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 	voxel->SetPosition(pos);
 
 	std::vector<glm::vec3> points = voxel->getPoints();
-	//g_vertex_buffer_data.insert(g_vertex_buffer_data.end(), points.begin(), points.end());
-	computedVertices.insert(computedVertices.end(), points.begin(), points.end());
+	g_vertex_buffer_data.insert(g_vertex_buffer_data.end(), points.begin(), points.end());
+	//computedVertices.insert(computedVertices.end(), points.begin(), points.end());
 
 	std::vector<GLuint> voxelIndices = voxel->getIndices(indices.size());
-	/*indices.insert(indices.end(), voxelIndices.begin(), voxelIndices.end());*/
-	computedIndices.insert(computedIndices.end(), voxelIndices.begin(), voxelIndices.end());
+	indices.insert(indices.end(), voxelIndices.begin(), voxelIndices.end());
+	//computedIndices.insert(computedIndices.end(), voxelIndices.begin(), voxelIndices.end());
 
 	std::vector<glm::vec3> voxelNormals = voxel->getNormals();
-	/*normals.insert(normals.end(), voxelNormals.begin(), voxelNormals.end());*/
-	computedNormals.insert(computedNormals.end(), voxelNormals.begin(), voxelNormals.end());
+	normals.insert(normals.end(), voxelNormals.begin(), voxelNormals.end());
+	//computedNormals.insert(computedNormals.end(), voxelNormals.begin(), voxelNormals.end());
 
 	voxelItems.push_back(voxel);
 	
