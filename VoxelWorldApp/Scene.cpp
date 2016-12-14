@@ -40,35 +40,38 @@ void Scene::Initialize()
 	LightID = glGetUniformLocation(program, "lightPos");
 	//AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser cette ligne pour instancier un voxel. il fera appel à la fonction Update pour mettre a jour les buffers de la scene la scene
 
-	glGenVertexArrays(1, &VertexArrayID);
 	glGenBuffers(1, &vertexBufferPoints);
-	glGenBuffers(1, &normalbuffer);
-	glGenBuffers(1, &voxelElementBuffer);
-
-	glBindVertexArray(VertexArrayID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(),GL_STATIC_DRAW);
+
+	glGenBuffers(1, &voxelPositionbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, voxelPositionbuffer);
+	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), NULL, GL_STREAM_DRAW); //Initialized with NULL because the buffer will be updated later
+
+	glGenBuffers(1, &normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	//glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, voxelPositionbuffer);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
-
+	glEnableVertexAttribArray(2);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	//glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 1800 * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	
+
+	//glBindVertexArray(0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	
 
 }
 
@@ -82,34 +85,44 @@ void Scene::Render()
 	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
 	glProgramUniform4fv(program, LightID, 1, lightPos);
 
-	glBindVertexArray(VertexArrayID);
-	glPointSize(5);
+	glVertexAttribDivisor(0, 0);
+	glVertexAttribDivisor(1, 0);
+	glVertexAttribDivisor(2, 1);
+
+	//glBindVertexArray(VertexArrayID);
 	//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glDrawElementsInstanced(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0, voxelItems.size());
-	glBindVertexArray(0);
+	glDrawArraysInstanced(GL_POINTS, 0, 8, voxelItems.size());
+	//glDrawElementsInstanced(GL_TRIANGLES, 8, GL_STREAM_DRAW, indices.data(), voxelItems.size());
+	//glBindVertexArray(0);
 
 }
 
 void Scene::UpdateBuffers()
 {
-	glBindVertexArray(VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size() * sizeof(glm::vec3), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 8 * voxelItems.size() * sizeof(glm::vec3), positions.data());
 
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER,0, 8* voxelItems.size() * sizeof(glm::vec3), normals.data());
 	
+	/*
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 1800 * sizeof(unsigned int), NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, voxelItems.size() * 36 * sizeof(GLuint), indices.data());
+	*/
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 }
 
 void Scene::AddVoxelAtPosition(glm::vec3 pos)
 {
 	Voxel* voxel = new Voxel();
-	voxel->SetPosition(pos);
+	//voxel->SetPosition(pos);
+
+	positions.push_back(pos);
 
 	std::vector<glm::vec3> points = voxel->getPoints();
 	g_vertex_buffer_data.insert(g_vertex_buffer_data.end(), points.begin(), points.end());

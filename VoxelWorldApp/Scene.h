@@ -21,8 +21,9 @@ private:
 	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
 	GLuint vertexBufferPoints;
 	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
+	GLuint voxelPositionbuffer;
 	GLuint uvbuffer, normalbuffer;
-	std::vector<glm::vec3> g_vertex_buffer_data, normals;
+	std::vector<glm::vec3> vertices, normals, positions;
 	std::vector<GLuint> indices;
 
 	GLuint program;
