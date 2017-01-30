@@ -12,7 +12,7 @@ Scene::Scene()
 	mvp = proj * view * model;
 
 	input = Input();
-	g_vertex_buffer_data = std::vector<glm::vec3>();
+	vertices = std::vector<glm::vec3>();
 	indices = std::vector<GLuint>();
 	normals = std::vector<glm::vec3>();
 
@@ -38,19 +38,21 @@ void Scene::Initialize()
 	position_location = glGetAttribLocation(program, "position");
 	color_location = glGetUniformLocation(program, "vertexColor");
 	LightID = glGetUniformLocation(program, "lightPos");
+	CameraRightWorldID = glGetUniformLocation(program, "CameraRight_worldspace");
+	CameraUpWorldID = glGetUniformLocation(program, "CameraUp_worldspace");
 	//AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser cette ligne pour instancier un voxel. il fera appel à la fonction Update pour mettre a jour les buffers de la scene la scene
-
-	glGenBuffers(1, &vertexBufferPoints);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(),GL_STATIC_DRAW);
 
 	glGenBuffers(1, &voxelPositionbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, voxelPositionbuffer);
+	glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(glm::vec3), vertices.data(),GL_STATIC_DRAW);
+
+	glGenBuffers(1, &vertexBufferPoints);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
 	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), NULL, GL_STREAM_DRAW); //Initialized with NULL because the buffer will be updated later
 
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-
+	glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), NULL, GL_STREAM_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferPoints);
@@ -65,8 +67,6 @@ void Scene::Initialize()
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	//glBufferData(GL_ARRAY_BUFFER, 400 * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-
-	
 
 	//glBindVertexArray(0);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -125,7 +125,7 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 	positions.push_back(pos);
 
 	std::vector<glm::vec3> points = voxel->getPoints();
-	g_vertex_buffer_data.insert(g_vertex_buffer_data.end(), points.begin(), points.end());
+	vertices.insert(vertices.end(), points.begin(), points.end());
 	//computedVertices.insert(computedVertices.end(), points.begin(), points.end());
 
 	std::vector<GLuint> voxelIndices = voxel->getIndices(indices.size());
@@ -141,7 +141,7 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 	UpdateBuffers();
 
 	std::cout << "Scene Added at Position : " << pos.x << " " << pos.y << " " << pos.z << std::endl;
-	std::cout << "Vertex Buffer Size : " << g_vertex_buffer_data.size() << std::endl;
+	std::cout << "Vertex Buffer Size : " << vertices.size() << std::endl;
 }
 
 void Scene::TranslateCamera(glm::vec3 v)

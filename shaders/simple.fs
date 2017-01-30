@@ -37,5 +37,5 @@ void main()
 
 	float cosTheta = clamp( dot( n,l ), 0,1 );
     //gl_FragColor = vec4(color_out, 1.0);
-	color = fragmentColor + LightPower * pow(cosAlpha, 5) / (distance*distance);
+	color = fragmentColor;// + LightPower * pow(cosAlpha, 5) / (distance*distance);
 }
