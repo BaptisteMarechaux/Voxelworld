@@ -99,6 +99,7 @@ int main(int, char**)
 	bool show_test_window = true;
 	bool reset = false;
 	bool addAVoxel = false;
+	bool addChunk = false;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
@@ -121,9 +122,10 @@ int main(int, char**)
 
 		ImGui::Columns(1);
 		ImGui::Separator();
-		ImGui::Text("Add a Voxel");
+		ImGui::Text("Add a Voxel/Chunk");
 		ImGui::DragFloat3("Position", (float*)&newVoxelPosition);
 		if (ImGui::Button("Add A Voxel")) addAVoxel ^= 1;
+		if (ImGui::Button("Add A Chunk")) addChunk ^= 1;
 
 		ImGui::Separator();
 		if (ImGui::Button("Reset")) reset ^= 1;
@@ -156,6 +158,13 @@ int main(int, char**)
 			glm::vec3 pos = glm::vec3(newVoxelPosition[0], newVoxelPosition[1], newVoxelPosition[2]);
 			mainScene->AddVoxelAtPosition(pos);
 			addAVoxel = false;
+		}
+
+		if (addChunk)
+		{
+			glm::vec3 pos = glm::vec3(newVoxelPosition[0], newVoxelPosition[1], newVoxelPosition[2]);
+			mainScene->AddChunkAtPosition(pos);
+			addChunk = false;
 		}
 
 		// Rendering

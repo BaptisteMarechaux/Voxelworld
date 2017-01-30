@@ -11,6 +11,7 @@
 
 #include "Input.h"
 #include "Voxel.h"
+#include "Chunk.h"
 
 class Scene
 {
@@ -22,8 +23,10 @@ private:
 	GLuint vertexBufferPoints;
 	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
 	GLuint uvbuffer, normalbuffer;
-	std::vector<glm::vec3> g_vertex_buffer_data, normals, positions;
+	std::vector<glm::vec3> g_vertex_buffer_data, normals, positions, vertices;
 	std::vector<GLuint> indices;
+
+	GLuint voxelVertexArrayID;
 
 	GLuint program;
 	GLuint position_location, color_location, mvp_location, light_location;
@@ -38,6 +41,9 @@ private:
 
 	std::vector<glm::vec3> computedVertices, computedNormals;
 	std::vector<GLuint> computedIndices;
+
+	//Chunks
+	std::vector<Chunk> chunks;
 
 	//Camera management
 	glm::vec3 camPosition = glm::vec3(4, 3, 10);
@@ -58,6 +64,7 @@ public:
 	void Render();
 	void UpdateBuffers();
 	void AddVoxelAtPosition(glm::vec3 pos);
+	void AddChunkAtPosition(glm::vec3 pos);
 	void TranslateCamera(glm::vec3 v);
 	int getVertexCount();
 	void computeMatrixes(int winWidth, int winHeight, double xPos, double yPos);

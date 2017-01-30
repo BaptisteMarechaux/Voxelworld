@@ -7,6 +7,7 @@ Voxel::Voxel()
 	transform = VTransform();
 
 	points = {
+		/*
 		glm::vec3(-0.5f, -0.5f, 0.5f),
 		glm::vec3(0.5f, -0.5f, 0.5f),
 		glm::vec3(0.5f, -0.5f, -0.5f),
@@ -15,6 +16,43 @@ Voxel::Voxel()
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(0.5f, 0.5f, -0.5f),
 		glm::vec3(-0.5f, 0.5f, -0.5f)
+		*/
+		glm::vec3(-0.5f,-0.5f,-0.5f), // triangle 1 : begin
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f), // triangle 1 : end
+		glm::vec3(0.5f, 0.5f,-0.5f), // triangle 2 : begin
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f), // triangle 2 : end
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f,-0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f,-0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(-0.5f, 0.5f, 0.5f),
+		glm::vec3(0.5f,-0.5f, 0.5f)
 
 	};
 
@@ -50,6 +88,8 @@ Voxel::Voxel()
 		}
 		normals.push_back(glm::normalize(pointNormal));
 	}
+
+	visible = true;
 }
 
 

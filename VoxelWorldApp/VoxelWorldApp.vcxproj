@@ -163,6 +163,7 @@
     <ClInclude Include="..\libs\imgui\stb_rect_pack.h" />
     <ClInclude Include="..\libs\imgui\stb_textedit.h" />
     <ClInclude Include="..\libs\imgui\stb_truetype.h" />
+    <ClInclude Include="Chunk.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="..\libs\imgui\imgui.cpp" />
     <ClCompile Include="..\libs\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="stdafx.cpp" />

@@ -14,6 +14,7 @@ private:
 	std::vector<GLuint> indices; //chaque int devra laisser place à 2 00 à la fin pour la partie flotante
 	//Exemple 200 équivaut donc à 2.00, 3005 équivaut à 30.05
 public:
+	bool visible;
 	GLint program;
 	GLuint position_location, color_location, mvp_location;
 	VTransform transform;
