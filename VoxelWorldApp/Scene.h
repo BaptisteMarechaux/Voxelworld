@@ -17,18 +17,22 @@ class Scene
 private:
 	std::list<Voxel*> voxelItems;
 	glm::mat4 model, proj, mvp, view;
-	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID;
+	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID, deltaTimeID;
 	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
 	GLuint vertexBufferPoints;
 	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
 	GLuint uvbuffer, normalbuffer;
-	std::vector<glm::vec3> g_vertex_buffer_data, normals;
+	std::vector<glm::vec3> g_vertex_buffer_data, normals, positions;
 	std::vector<GLuint> indices;
 
 	GLuint program;
 	GLuint position_location, color_location, mvp_location, light_location;
 
-	float lightPos[3] = { 1, 1, 1 };
+	float lastTime;
+	float currentTime;
+	float deltaTime;
+
+	float lightPos[3] = { 1, 1, 0 };
 
 	Input input;
 

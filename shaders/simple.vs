@@ -17,6 +17,7 @@ uniform mat4 V;
 uniform mat4 M;
 
 uniform vec3 lightPos;
+uniform float deltaTime;
 
 void main()
 {

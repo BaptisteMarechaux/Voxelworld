@@ -12,6 +12,7 @@ out vec4 color;
 
 uniform mat4 MV;
 uniform vec3 lightPos;
+uniform float deltaTime;
 
 void main()
 {
