@@ -74,5 +74,18 @@ std::vector<glm::vec3> Chunk::getNormals()
 
 void Chunk::deleteRandomVoxels(float probability)
 {
-
+	for (int x = 0; x < size; x++)
+	{
+		for (int y = 0; y < size; y++)
+		{
+			for (int z = 0; z < size; z++)
+			{
+				if (rand() > 0.5f)
+				{
+					voxels[x][y][z].visible=false;
+				}
+				
+			}
+		}
+	}
 }
