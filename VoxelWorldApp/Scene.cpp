@@ -31,8 +31,8 @@ Scene::~Scene()
 void Scene::Initialize()
 {
 	glEnable(GL_CULL_FACE);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	program = LoadShaders("..\\shaders\\simple.vs", "..\\shaders\\simple.fs");
 	mvp_location = glGetUniformLocation(program, "MVP");
@@ -73,8 +73,8 @@ void Scene::Render()
 
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
-	lightPos[0] = cosf(0.5f * 0.2f * deltaTime);
-	lightPos[1] = sinf(0.5f * 0.2f * deltaTime);
+	//lightPos[0] = cosf(0.5f * 0.2f * deltaTime);
+	//lightPos[1] = sinf(0.5f * 0.2f * deltaTime);
 	
 	glUseProgram(program);
 	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
@@ -204,7 +204,7 @@ void Scene::computeMatrixes(int winWidth, int winHeight, double xPos, double yPo
 
 	up = glm::cross(right, direction);
 
-	proj = glm::perspective(initialFoV, 16.0f / 9.0f, 0.1f, 300.0f);
+	proj = glm::perspective(initialFoV, 16.0f / 9.0f, 0.1f, 3000.0f);
 	view = glm::lookAt(
 		camPosition,
 		direction,
@@ -219,13 +219,13 @@ void Scene::zoomFoV(float val)
 	proj = glm::perspective(FoV, 16.0f / 9.0f, 0.1f, 3000.0f);
 }
 
-void Scene::AutoRotateCamera(float speed)
+void Scene::AutoRotateCamera(float speed, float distance)
 {
 	static double lastTime = glfwGetTime();
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
-	camPosition.x = 300 * cos(currentTime * speed);
-	camPosition.z = 300 * sin(currentTime * speed);
+	camPosition.x = distance * cos(currentTime * speed);
+	camPosition.z = distance * sin(currentTime * speed);
 
 	view = glm::lookAt(
 		camPosition,

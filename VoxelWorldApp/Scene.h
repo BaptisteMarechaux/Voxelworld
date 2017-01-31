@@ -19,7 +19,7 @@ private:
 	std::vector<Voxel*> voxelItems;
 	glm::mat4 model, proj, mvp, view;
 	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID, deltaTimeID;
-	GLfloat defaultFragmentColor[4] = { 1, 0, 0, 1 };
+	GLfloat defaultFragmentColor[4] = { 0.6f, 0, 0.4f, 1 };
 	GLuint vertexBufferPoints;
 	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
 	GLuint uvbuffer, normalbuffer;
@@ -35,7 +35,7 @@ private:
 	float currentTime;
 	float deltaTime;
 
-	float lightPos[3] = { 1, 1, 0 };
+	float lightPos[3] = { 3, 3, 0 };
 
 	Input input;
 
@@ -71,7 +71,7 @@ public:
 	void computeMatrixes(int winWidth, int winHeight, double xPos, double yPos);
 	void zoomFoV(float);
 
-	void AutoRotateCamera(float speed);
+	void AutoRotateCamera(float speed, float distance=500);
 
 	void Destroy();
 };

@@ -7,49 +7,50 @@ Voxel::Voxel()
 	transform = VTransform();
 
 	points = {
-		/*
-		glm::vec3(-0.5f, -0.5f, 0.5f),
-		glm::vec3(0.5f, -0.5f, 0.5f),
-		glm::vec3(0.5f, -0.5f, -0.5f),
-		glm::vec3(-0.5f, -0.5f, -0.5f),
-		glm::vec3(-0.5f, 0.5f, 0.5f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(0.5f, 0.5f, -0.5f),
-		glm::vec3(-0.5f, 0.5f, -0.5f)
-		*/
 		glm::vec3(-0.5f,-0.5f,-0.5f), // triangle 1 : begin
 		glm::vec3(-0.5f,-0.5f, 0.5f),
 		glm::vec3(-0.5f, 0.5f, 0.5f), // triangle 1 : end
+
 		glm::vec3(0.5f, 0.5f,-0.5f), // triangle 2 : begin
 		glm::vec3(-0.5f,-0.5f,-0.5f),
 		glm::vec3(-0.5f, 0.5f,-0.5f), // triangle 2 : end
+
 		glm::vec3(0.5f,-0.5f, 0.5f),
 		glm::vec3(-0.5f,-0.5f,-0.5f),
 		glm::vec3(0.5f,-0.5f,-0.5f),
+
 		glm::vec3(0.5f, 0.5f,-0.5f),
 		glm::vec3(0.5f,-0.5f,-0.5f),
 		glm::vec3(-0.5f,-0.5f,-0.5f),
+
 		glm::vec3(-0.5f,-0.5f,-0.5f),
 		glm::vec3(-0.5f, 0.5f, 0.5f),
 		glm::vec3(-0.5f, 0.5f,-0.5f),
+
 		glm::vec3(0.5f,-0.5f, 0.5f),
 		glm::vec3(-0.5f,-0.5f, 0.5f),
 		glm::vec3(-0.5f,-0.5f,-0.5f),
+
 		glm::vec3(-0.5f, 0.5f, 0.5f),
 		glm::vec3(-0.5f,-0.5f, 0.5f),
 		glm::vec3(0.5f,-0.5f, 0.5f),
+
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(0.5f,-0.5f,-0.5f),
 		glm::vec3(0.5f, 0.5f,-0.5f),
+
 		glm::vec3(0.5f,-0.5f,-0.5f),
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(0.5f,-0.5f, 0.5f),
+
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(0.5f, 0.5f,-0.5f),
 		glm::vec3(-0.5f, 0.5f,-0.5f),
+
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(-0.5f, 0.5f,-0.5f),
 		glm::vec3(-0.5f, 0.5f, 0.5f),
+
 		glm::vec3(0.5f, 0.5f, 0.5f),
 		glm::vec3(-0.5f, 0.5f, 0.5f),
 		glm::vec3(0.5f,-0.5f, 0.5f)
@@ -70,11 +71,30 @@ Voxel::Voxel()
 		4, 5, 6,
 		4, 6, 7
 	};
+	/*
+	normals = {
+
+	};*/
 
 	//ComputeIndices(indicesSize);
-	for (unsigned int i = 0; i < points.size(); i++)
+	for (unsigned int i = 0; i < points.size(); i+=3)
 	{
-		glm::vec3 pointNormal = glm::vec3();
+		glm::vec3 edge1 = points[i + 1] - points[i];
+		glm::vec3 edge2 = points[i + 2] - points[i];
+		glm::vec3 triangleNormal = glm::cross(edge1, edge2);
+		normals.push_back(glm::normalize(triangleNormal));
+
+		edge1 = points[i] - points[i+1];
+		edge2 = points[i + 2] - points[i+1];
+		triangleNormal = glm::cross(edge1, edge2);
+		normals.push_back(glm::normalize(triangleNormal));
+
+		edge1 = points[i] - points[i + 2];
+		edge2 = points[i + 1] - points[i + 2];
+		triangleNormal = glm::cross(edge1, edge2);
+		normals.push_back(glm::normalize(triangleNormal));
+
+		/*
 		for (int j = 0; j < indices.size(); j+=3)
 		{
 			if (indices[j] == i || indices[j + 1] == i || indices[j + 2] == i)
@@ -86,7 +106,8 @@ Voxel::Voxel()
 			}
 			
 		}
-		normals.push_back(glm::normalize(pointNormal));
+		*/
+		//normals.push_back(glm::normalize(pointNormal));
 	}
 
 	visible = true;
