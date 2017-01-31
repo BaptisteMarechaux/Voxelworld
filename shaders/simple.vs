@@ -19,6 +19,9 @@ uniform mat4 M;
 uniform vec3 lightPos;
 uniform float deltaTime;
 
+uniform vec4 groundColor;
+uniform vec4 skyColor;
+
 void main()
 {
     gl_Position = MVP * vec4(vertexPosition_modelspace, 1);

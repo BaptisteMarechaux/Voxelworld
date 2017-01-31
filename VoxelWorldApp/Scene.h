@@ -64,11 +64,14 @@ public:
 	void Render();
 	void UpdateBuffers();
 	void AddVoxelAtPosition(glm::vec3 pos);
-	void AddChunkAtPosition(glm::vec3 pos);
+	void AddChunkAtPosition(glm::vec3 pos, int chunkSize);
+	void AddSpherizedChunkAtPosition(glm::vec3 pos, int chunkSize);
 	void TranslateCamera(glm::vec3 v);
 	int getVertexCount();
 	void computeMatrixes(int winWidth, int winHeight, double xPos, double yPos);
 	void zoomFoV(float);
+
+	void AutoRotateCamera(float speed);
 
 	void Destroy();
 };

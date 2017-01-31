@@ -23,6 +23,7 @@ public:
 	std::vector<glm::vec3> getVertices();
 	std::vector<glm::vec3> getNormals();
 	void deleteRandomVoxels(float probability);
+	void Spherize();
 
 };
 

@@ -23,6 +23,7 @@ int nbFrames = 0;
 double lastTime = 0.0f;
 GLfloat fragmentColor[4] = { 1, 0, 0, 1 };
 float newVoxelPosition[3];
+int newChunkSize=3;
 
 Scene *mainScene;
 double mouseX, mouseY;
@@ -100,6 +101,7 @@ int main(int, char**)
 	bool reset = false;
 	bool addAVoxel = false;
 	bool addChunk = false;
+	bool addSpherizedChunk = false;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImColor(114, 144, 154);
 
@@ -125,7 +127,9 @@ int main(int, char**)
 		ImGui::Text("Add a Voxel/Chunk");
 		ImGui::DragFloat3("Position", (float*)&newVoxelPosition);
 		if (ImGui::Button("Add A Voxel")) addAVoxel ^= 1;
+		ImGui::DragInt("Chunk Size", (int*)&newChunkSize);
 		if (ImGui::Button("Add A Chunk")) addChunk ^= 1;
+		if (ImGui::Button("Add A Spheric Chunk")) addSpherizedChunk ^= 1;
 
 		ImGui::Separator();
 		if (ImGui::Button("Reset")) reset ^= 1;
@@ -163,8 +167,16 @@ int main(int, char**)
 		if (addChunk)
 		{
 			glm::vec3 pos = glm::vec3(newVoxelPosition[0], newVoxelPosition[1], newVoxelPosition[2]);
-			mainScene->AddChunkAtPosition(pos);
+			mainScene->AddChunkAtPosition(pos, newChunkSize);
 			addChunk = false;
+		}
+
+		if (addSpherizedChunk)
+		{
+			glm::vec3 pos = glm::vec3(newVoxelPosition[0], newVoxelPosition[1], newVoxelPosition[2]);
+			mainScene->AddSpherizedChunkAtPosition(pos, newChunkSize);
+			//mainScene->AddChunkAtPosition(pos);
+			addSpherizedChunk = false;
 		}
 
 		// Rendering

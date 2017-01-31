@@ -69,6 +69,8 @@ void Scene::Initialize()
 
 void Scene::Render()
 {
+	AutoRotateCamera(1);
+
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
 	lightPos[0] = cosf(0.5f * 0.2f * deltaTime);
@@ -126,11 +128,29 @@ void Scene::AddVoxelAtPosition(glm::vec3 pos)
 	std::cout << "Vertex Buffer Size : " << vertices.size() << std::endl;
 }
 
-void Scene::AddChunkAtPosition(glm::vec3 pos)
+void Scene::AddChunkAtPosition(glm::vec3 pos, int chunkSize)
 {
-	chunks.push_back(Chunk(3, glm::vec3(0, 0, 0)));
+	chunks.push_back(Chunk(chunkSize, glm::vec3(0, 0, 0)));
 
 	std::vector<glm::vec3> points = chunks[chunks.size()-1].getVertices();
+	vertices.insert(vertices.end(), points.begin(), points.end());
+
+	std::vector<glm::vec3> voxelNormals = chunks[chunks.size() - 1].getNormals();
+	normals.insert(normals.end(), voxelNormals.begin(), voxelNormals.end());
+
+	UpdateBuffers();
+
+	std::cout << "Scene Added Chunk at Position : " << pos.x << " " << pos.y << " " << pos.z << std::endl;
+	std::cout << "Vertex Buffer Size : " << vertices.size() << std::endl;
+}
+
+void Scene::AddSpherizedChunkAtPosition(glm::vec3 pos, int chunkSize)
+{
+	chunks.push_back(Chunk(chunkSize, glm::vec3(0, 0, 0)));
+
+	chunks[chunks.size() - 1].Spherize();
+
+	std::vector<glm::vec3> points = chunks[chunks.size() - 1].getVertices();
 	vertices.insert(vertices.end(), points.begin(), points.end());
 
 	std::vector<glm::vec3> voxelNormals = chunks[chunks.size() - 1].getNormals();
@@ -196,7 +216,23 @@ void Scene::computeMatrixes(int winWidth, int winHeight, double xPos, double yPo
 void Scene::zoomFoV(float val)
 {
 	FoV = glm::radians( initialFoV - glm::radians(5 * val) );
-	proj = glm::perspective(FoV, 16.0f / 9.0f, 0.1f, 300.0f);
+	proj = glm::perspective(FoV, 16.0f / 9.0f, 0.1f, 3000.0f);
+}
+
+void Scene::AutoRotateCamera(float speed)
+{
+	static double lastTime = glfwGetTime();
+	double currentTime = glfwGetTime();
+	float deltaTime = float(currentTime - lastTime);
+	camPosition.x = 300 * cos(currentTime * speed);
+	camPosition.z = 300 * sin(currentTime * speed);
+
+	view = glm::lookAt(
+		camPosition,
+		direction,
+		glm::vec3(0, 1, 0)
+	);
+	mvp = proj * view * model;
 }
 
 void Scene::Destroy()

@@ -89,3 +89,25 @@ void Chunk::deleteRandomVoxels(float probability)
 		}
 	}
 }
+
+void Chunk::Spherize()
+{
+	for (int x = 0; x < size; x++)
+	{
+		for (int y = 0; y < size; y++)
+		{
+			for (int z = 0; z < size; z++)
+			{
+				if (sqrt((float)(x - size / 2)*(x - size / 2) + (y - size / 2)*(y - size / 2) + (z - size / 2)*(z - size / 2)) <= size / 2)
+				{
+					voxels[x][y][z].visible = true;
+				}
+				else
+				{
+					voxels[x][y][z].visible = false;
+				}
+
+			}
+		}
+	}
+}
