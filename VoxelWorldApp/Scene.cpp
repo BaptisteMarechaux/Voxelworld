@@ -1,5 +1,8 @@
 #include "Scene.h"
 
+#define POSITION_TEXTURE_UNIT           GL_TEXTURE1
+#define POSITION_TEXTURE_UNIT_INDEX     1
+
 Scene::Scene()
 {
 	model = glm::mat4(1.0);
@@ -44,6 +47,14 @@ void Scene::Initialize()
 	deltaTimeID = glGetUniformLocation(program, "deltaTime");
 	//AddVoxelAtPosition(glm::vec3(0, 0, 0)); //Utiliser cette ligne pour instancier un voxel. il fera appel à la fonction Update pour mettre a jour les buffers de la scene la scene
 
+	ssaoProgram = LoadShaders("..\\shaders\\ssao.vs", "..\\shaders\\ssao.fs");
+	ssao_posTextureUnitLocation = glGetUniformLocation(ssaoProgram, "gPositionMap");
+	ssao_sampleRadLocation = glGetUniformLocation(ssaoProgram, "gSampleRad");
+	ssao_projMatrixLocation = glGetUniformLocation(ssaoProgram, "gProj");
+	ssao_kernelLocation = glGetUniformLocation(ssaoProgram, "gKernel");
+
+	GenerateSampleKernel();
+
 	glGenVertexArrays(1, &voxelVertexArrayID);
 	glBindVertexArray(voxelVertexArrayID);
 		glGenBuffers(1, &vertexBufferPoints);
@@ -59,8 +70,6 @@ void Scene::Initialize()
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		//glGenBuffers(1, &voxelElementBuffer);
 	glBindVertexArray(0);
 
 	lastTime = glfwGetTime();
@@ -73,22 +82,15 @@ void Scene::Render()
 
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
+
+	GeometryPass();
+
+	//SSAOPass();
+
+	BlurPass();
+
 	//lightPos[0] = cosf(0.5f * 0.2f * deltaTime);
 	//lightPos[1] = sinf(0.5f * 0.2f * deltaTime);
-	
-	glUseProgram(program);
-	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
-	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
-	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
-	glProgramUniform1f(program, deltaTimeID, deltaTime);
-	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
-	glProgramUniform4fv(program, LightID, 1, lightPos);
-
-	glBindVertexArray(voxelVertexArrayID);
-	glPointSize(5);
-	glDrawArrays(GL_TRIANGLES, 0,vertices.size());
-	//glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 
 	lastTime = glfwGetTime();
 
@@ -233,6 +235,57 @@ void Scene::AutoRotateCamera(float speed, float distance)
 		glm::vec3(0, 1, 0)
 	);
 	mvp = proj * view * model;
+}
+
+void Scene::GeometryPass()
+{
+	glUseProgram(program);
+	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
+	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
+	glProgramUniform1f(program, deltaTimeID, deltaTime);
+	glProgramUniform4fv(program, color_location, 1, defaultFragmentColor);
+	glProgramUniform4fv(program, LightID, 1, lightPos);
+
+	glBindVertexArray(voxelVertexArrayID);
+	glPointSize(5);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	//glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
+void Scene::SSAOPass()
+{
+	glUseProgram(ssaoProgram);
+	glUniform1i(ssao_posTextureUnitLocation, POSITION_TEXTURE_UNIT_INDEX);
+
+	glBindVertexArray(voxelVertexArrayID);
+	glPointSize(5);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	//glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+}
+
+void Scene::BlurPass()
+{
+}
+
+void Scene::GenerateSampleKernel()
+{
+	kernel = std::vector<glm::vec3>(kernelSize);
+	for (int i = 0; i < kernelSize; i++) {
+		kernel[i] = glm::vec3(RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f), RandomFloat(0.0f, 1.0f));
+		glm::normalize(kernel[i]);
+	}
+}
+
+float Scene::RandomFloat(float a, float b)
+{
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
 }
 
 void Scene::Destroy()

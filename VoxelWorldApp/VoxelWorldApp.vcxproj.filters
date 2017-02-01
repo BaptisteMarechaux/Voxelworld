@@ -148,5 +148,11 @@
     <None Include="..\shaders\simple.vs">
       <Filter>Fichiers sources\shaders</Filter>
     </None>
+    <None Include="..\shaders\ssao.fs">
+      <Filter>Fichiers sources\shaders</Filter>
+    </None>
+    <None Include="..\shaders\ssao.vs">
+      <Filter>Fichiers sources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

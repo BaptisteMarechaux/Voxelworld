@@ -16,20 +16,29 @@
 class Scene
 {
 private:
-	std::vector<Voxel*> voxelItems;
+	//Matrix
 	glm::mat4 model, proj, mvp, view;
-	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID, deltaTimeID;
+	//General Elements
 	GLfloat defaultFragmentColor[4] = { 0.6f, 0, 0.4f, 1 };
+
+	//Buffers
 	GLuint vertexBufferPoints;
-	GLuint voxelElementBuffer; //Element Array Buffer Pour les indices de faces de Voxels
 	GLuint uvbuffer, normalbuffer;
-	std::vector<glm::vec3> g_vertex_buffer_data, normals, positions, vertices;
+
+	std::vector<glm::vec3> normals, positions, vertices;
 	std::vector<GLuint> indices;
 
+	//Shader References
+	GLuint program, ssaoProgram;
+	GLuint position_location, color_location, mvp_location, light_location;
+	GLuint MatrixID, VertexArrayID, LightID, ModelMatrixID, ViewMatrixID, deltaTimeID;
+
+	//SSAO Locations
+	GLuint ssao_posTextureUnitLocation, ssao_sampleRadLocation, ssao_projMatrixLocation, ssao_kernelLocation;
+
+	//VAO
 	GLuint voxelVertexArrayID;
 
-	GLuint program;
-	GLuint position_location, color_location, mvp_location, light_location;
 
 	float lastTime;
 	float currentTime;
@@ -56,6 +65,10 @@ private:
 	float camSpeed = 0.2f;
 	float mouseSpeed = 0.001f;
 
+	//SSAO
+	int kernelSize = 10;
+	std::vector<glm::vec3> kernel;
+
 public:
 	Scene();
 	~Scene();
@@ -73,6 +86,15 @@ public:
 
 	void AutoRotateCamera(float speed, float distance=500);
 
+	//Render Passes
+	void GeometryPass();
+	void SSAOPass();
+	void BlurPass();
+
+	//SSAO
+	void GenerateSampleKernel();
+
+	float RandomFloat(float a, float b);
 	void Destroy();
 };
 
