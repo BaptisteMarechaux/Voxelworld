@@ -179,6 +179,12 @@ int main(int, char**)
 			addSpherizedChunk = false;
 		}
 
+		if (reset)
+		{
+			mainScene->resetScene();
+			reset = false;
+		}
+
 		// Rendering
 		int display_w, display_h;
 		glfwGetFramebufferSize(window, &display_w, &display_h);

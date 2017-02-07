@@ -288,6 +288,16 @@ float Scene::RandomFloat(float a, float b)
 	return a + r;
 }
 
+void Scene::resetScene()
+{
+	chunks.clear();
+	normals.clear();
+	positions.clear();
+	vertices.clear();
+
+	UpdateBuffers();
+}
+
 void Scene::Destroy()
 {
 	glDeleteBuffers(1, &vertexBufferPoints);

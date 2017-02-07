@@ -95,6 +95,7 @@ public:
 	void GenerateSampleKernel();
 
 	float RandomFloat(float a, float b);
+	void resetScene();
 	void Destroy();
 };
 
