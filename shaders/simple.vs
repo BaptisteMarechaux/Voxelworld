@@ -26,8 +26,9 @@ uniform vec4 skyColor;
 
 void main()
 {
+	vec4 transparentColor = vec4(0, 0, 0, 0.5);
     gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
-	fragmentColor = vertexColor;
+	fragmentColor = vertexColor + vertexOcclusionColor;//+ transparentColor;
 	Position_worldspace = (M * vec4(vertexPosition_modelspace,1)).xyz;
 
 	// In camera space, the camera is at the origin (0,0,0).

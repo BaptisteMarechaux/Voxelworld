@@ -70,6 +70,13 @@ void Scene::Initialize()
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glGenBuffers(1, &occlusioncolorbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, occlusioncolorbuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * occlusionColors.size(), occlusionColors.data(), GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, occlusioncolorbuffer);
+		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glBindVertexArray(0);
 
 	lastTime = glfwGetTime();
@@ -104,6 +111,9 @@ void Scene::UpdateBuffers()
 
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, occlusioncolorbuffer);
+	glBufferData(GL_ARRAY_BUFFER, occlusionColors.size() * sizeof(float), occlusionColors.data(), GL_STATIC_DRAW);
 	
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, voxelElementBuffer);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
@@ -170,6 +180,37 @@ void Scene::TranslateCamera(glm::vec3 v)
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
 	camPosition += v * deltaTime * camSpeed;
+
+	view = glm::lookAt(
+		camPosition,
+		direction,
+		glm::vec3(0, 1, 0)
+	);
+	mvp = proj * view * model;
+}
+
+void Scene::TranslateCamera(CameraDirection dir)
+{
+	static double lastTime = glfwGetTime();
+	double currentTime = glfwGetTime();
+	float deltaTime = float(currentTime - lastTime);
+
+	if (dir == CameraDirection::forward)
+	{
+		camPosition += glm::normalize(direction-camPosition) * deltaTime * camSpeed;
+	}
+	else if (dir == CameraDirection::backward)
+	{
+		camPosition -= glm::normalize(direction - camPosition) * deltaTime * camSpeed;
+	}
+	else if (dir == CameraDirection::left)
+	{
+
+	}
+	else if (dir == CameraDirection::right)
+	{
+
+	}
 
 	view = glm::lookAt(
 		camPosition,

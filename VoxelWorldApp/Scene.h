@@ -13,6 +13,13 @@
 #include "Voxel.h"
 #include "Chunk.h"
 
+enum CameraDirection {
+	forward,
+	backward,
+	left,
+	right
+};
+
 class Scene
 {
 private:
@@ -26,6 +33,7 @@ private:
 	GLuint uvbuffer, normalbuffer, occlusioncolorbuffer;
 
 	std::vector<glm::vec3> normals, positions, vertices;
+	std::vector<float> occlusionColors;
 	std::vector<GLuint> indices;
 
 	//Shader References
@@ -82,6 +90,7 @@ public:
 	void AddSpherizedChunkAtPosition(glm::vec3 pos, int chunkSize);
 	glm::vec3 getCameraPosition();
 	void TranslateCamera(glm::vec3 v);
+	void TranslateCamera(CameraDirection direction);
 	int getVertexCount();
 	void computeMatrixes(int winWidth, int winHeight, double xPos, double yPos);
 	void zoomFoV(float);
@@ -99,5 +108,7 @@ public:
 	float RandomFloat(float a, float b);
 	void resetScene();
 	void Destroy();
+
+	
 };
 
