@@ -57,9 +57,9 @@ void Render()
 	if (ImGui::IsKeyDown(263)) //left
 		mainScene->TranslateCamera(glm::vec3(-1, 0, 0));
 	if (ImGui::IsKeyDown(264)) //down
-		mainScene->TranslateCamera(glm::vec3(0, -1, 0));
+		mainScene->TranslateCamera(CameraDirection::backward);
 	if (ImGui::IsKeyDown(265)) //up
-		mainScene->TranslateCamera(glm::vec3(0, 1, 0));
+		mainScene->TranslateCamera(CameraDirection::forward);
 	
 	mainScene->Render();
 }

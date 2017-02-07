@@ -11,7 +11,9 @@ class Voxel
 {
 private:
 	std::vector<glm::vec3> points, normals;
+	std::vector<float> occlusionColors;
 	std::vector<GLuint> indices; //chaque int devra laisser place à 2 00 à la fin pour la partie flotante
+	std::vector<float> neighbours;
 	//Exemple 200 équivaut donc à 2.00, 3005 équivaut à 30.05
 public:
 	bool visible;
@@ -30,6 +32,10 @@ public:
 	std::vector<glm::vec3> getPoints();
 	std::vector<GLuint> getIndices();
 	std::vector<glm::vec3> getNormals();
+	std::vector<float> getOcclusionColors();
+
+	void setNeighbours();
+	std::vector<float> getNeighbours();
 
 	std::vector<GLuint> getIndices(int indicesSize);
 };

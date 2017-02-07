@@ -71,10 +71,37 @@ Voxel::Voxel()
 		4, 5, 6,
 		4, 6, 7
 	};
-	/*
-	normals = {
 
-	};*/
+	occlusionColors = {
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+		0.0f, 0.0f, 0.0f, 0.5f,
+	};
+
+	neighbours = { //number of neighbours per point
+		0, 0, 1, 0, 0, 1, 0, 0
+	};
 
 	//ComputeIndices(indicesSize);
 	for (unsigned int i = 0; i < points.size(); i+=3)
@@ -177,6 +204,20 @@ std::vector<GLuint> Voxel::getIndices()
 std::vector<glm::vec3> Voxel::getNormals()
 {
 	return normals;
+}
+
+std::vector<float> Voxel::getOcclusionColors()
+{
+	return occlusionColors; 
+}
+
+void Voxel::setNeighbours()
+{
+}
+
+std::vector<float> Voxel::getNeighbours()
+{
+	return std::vector<float>();
 }
 
 std::vector<GLuint> Voxel::getIndices(int indicesSize)
