@@ -23,7 +23,7 @@ private:
 
 	//Buffers
 	GLuint vertexBufferPoints;
-	GLuint uvbuffer, normalbuffer;
+	GLuint uvbuffer, normalbuffer, occlusioncolorbuffer;
 
 	std::vector<glm::vec3> normals, positions, vertices;
 	std::vector<GLuint> indices;
@@ -64,6 +64,7 @@ private:
 
 	float camSpeed = 0.2f;
 	float mouseSpeed = 0.001f;
+	glm::vec3 cameraPosition;
 
 	//SSAO
 	int kernelSize = 10;
@@ -79,6 +80,7 @@ public:
 	void AddVoxelAtPosition(glm::vec3 pos);
 	void AddChunkAtPosition(glm::vec3 pos, int chunkSize);
 	void AddSpherizedChunkAtPosition(glm::vec3 pos, int chunkSize);
+	glm::vec3 getCameraPosition();
 	void TranslateCamera(glm::vec3 v);
 	int getVertexCount();
 	void computeMatrixes(int winWidth, int winHeight, double xPos, double yPos);

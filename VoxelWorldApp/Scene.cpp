@@ -78,7 +78,7 @@ void Scene::Initialize()
 
 void Scene::Render()
 {
-	AutoRotateCamera(1);
+	//AutoRotateCamera(1);
 
 	currentTime = glfwGetTime();
 	deltaTime = float(currentTime - lastTime);
