@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="VoxeworldApp">
+<head>
+	<title>Voxels</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="./public/scripts/angular/angular.min.js"></script>
+	<link rel="stylesheet" href="./public/scripts/angular/angular-material.min.css">
+	<script src="./public/scripts/angular/angular-material.min.js"></script>
+	<script src="./public/scripts/angular/angular-animate.min.js"></script>
+	<script src="./public/scripts/angular/angular-aria.min.js"></script>
+	<script src="./public/scripts/angular/angular-messages.min.js"></script>
+	<script src="./public/scripts/angular/angular-animate.js"></script>
+	<script src="./public/scripts/angular/angular-sanitize.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="./public/style/main.css">
+	<script src="./public/scripts/lib/three.min.js"></script>
+	<script src="./public/scripts/voxelworld.js"></script>
+	<script src="./public/scripts/main.js"></script>
+</head>
+<body ng-controller="VoxeworldMainController as controller">
+	<header><md-toolbar class="md-theme-indigo">
+		<div class="md-toolbar-tools">
+			<md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()">
+	        	<img src="./public/img/icons/ic_menu_white_24px.svg"></img>
+	        </md-button>
+			<h1 flex>V O X E L S</h1>
+		</div>
+	</md-toolbar></header>
+	<section>
+		<md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
+			<md-toolbar>
+				<h1 class="md-toolbar-tools">Menu</h1>
+			</md-toolbar>
+
+			<md-content layout-margin>
+				<ul class="wallMenu">
+	        		<li>
+	        			<menu-link class="ng-isolate-scope">
+	        				<a class="md-button md-ink-ripple" ng-click="">Menu Item</a>
+	        			</menu-link>
+	        		</li>
+	        	</ul>
+				<md-button ng-click="toggleLeft()" class="md-accent">
+					Close this Sidenav
+				</md-button>
+			</md-content>
+		</md-sidenav>
+		<div id="mainCanvasContainer"></div>
+	</section>
+	<footer>
+		Voxels, a Voxelworld App
+		<br>
+		Baptiste Maréchaux - Théo Couvert 2017
+	</footer>
+	<script type="x-shader/x-vertex" id="vertexShader">
+		varying vec3 vWorldPosition;
+		void main() {
+			vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			vWorldPosition = worldPosition.xyz;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+		uniform vec3 topColor;
+		uniform vec3 bottomColor;
+		uniform float offset;
+		uniform float exponent;
+		varying vec3 vWorldPosition;
+		void main() {
+			float h = normalize( vWorldPosition + offset ).y;
+			gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+		}
+	</script>
+</body>
+</html>
