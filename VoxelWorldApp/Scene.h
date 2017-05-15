@@ -104,6 +104,7 @@ public:
 
 	//SSAO
 	void GenerateSampleKernel();
+	void UpdateNeighbours();
 
 	float RandomFloat(float a, float b);
 	void resetScene();

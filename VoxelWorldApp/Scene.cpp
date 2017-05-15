@@ -144,6 +144,9 @@ void Scene::AddChunkAtPosition(glm::vec3 pos, int chunkSize)
 {
 	chunks.push_back(Chunk(chunkSize, glm::vec3(0, 0, 0)));
 
+	std::vector<glm::vec3> posits = chunks[chunks.size() - 1].getPositions();
+	positions.insert(positions.end(), posits.begin(), posits.end());
+
 	std::vector<glm::vec3> points = chunks[chunks.size()-1].getVertices();
 	vertices.insert(vertices.end(), points.begin(), points.end());
 
@@ -318,6 +321,14 @@ void Scene::GenerateSampleKernel()
 	for (int i = 0; i < kernelSize; i++) {
 		kernel[i] = glm::vec3(RandomFloat(-1.0f, 1.0f), RandomFloat(-1.0f, 1.0f), RandomFloat(0.0f, 1.0f));
 		glm::normalize(kernel[i]);
+	}
+}
+
+void Scene::UpdateNeighbours()
+{
+	for (int i = 0; i < positions.size(); i++)
+	{
+
 	}
 }
 

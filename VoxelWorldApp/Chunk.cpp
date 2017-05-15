@@ -15,6 +15,7 @@ Chunk::Chunk(int size, glm::vec3 pos)
 			{
 				voxels[x][y].push_back(Voxel());
 				voxels[x][y][z].SetPosition(glm::vec3(x + pos.x, y + pos.y, z + pos.z));
+				positions.push_back(glm::vec3(x + pos.x, y + pos.y, z + pos.z));
 			}
 		}
 	}
@@ -70,6 +71,11 @@ std::vector<glm::vec3> Chunk::getNormals()
 		}
 	}
 	return returnedNormals;
+}
+
+std::vector<glm::vec3> Chunk::getPositions()
+{
+	return positions;
 }
 
 void Chunk::deleteRandomVoxels(float probability)
