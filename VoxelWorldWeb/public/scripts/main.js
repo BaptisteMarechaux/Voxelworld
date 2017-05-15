@@ -11,7 +11,11 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
       };
     }
 
-    VXModule = new VXWORLD();
+    window.onload = function() {
+    	VXModule = new VXWORLD();
+    };
+
+    
 
 })
 .config(function($mdThemingProvider) {

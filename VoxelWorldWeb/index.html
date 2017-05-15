@@ -28,7 +28,7 @@
 	</md-toolbar></header>
 	<section>
 		<md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe="4">
-			<md-toolbar class="md-theme-indigo">
+			<md-toolbar>
 				<h1 class="md-toolbar-tools">Menu</h1>
 			</md-toolbar>
 
@@ -52,5 +52,25 @@
 		<br>
 		Baptiste Maréchaux - Théo Couvert 2017
 	</footer>
+	<script type="x-shader/x-vertex" id="vertexShader">
+		varying vec3 vWorldPosition;
+		void main() {
+			vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			vWorldPosition = worldPosition.xyz;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		}
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentShader">
+		uniform vec3 topColor;
+		uniform vec3 bottomColor;
+		uniform float offset;
+		uniform float exponent;
+		varying vec3 vWorldPosition;
+		void main() {
+			float h = normalize( vWorldPosition + offset ).y;
+			gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+		}
+	</script>
 </body>
 </html>
