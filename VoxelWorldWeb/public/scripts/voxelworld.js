@@ -80,8 +80,6 @@ var VXWORLD = (function() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.renderReverseSided = false;
 
-	document.addEventListener( 'keydown', onKeyDown, false );
-
 	var render = function () {
 		
 		requestAnimationFrame( render );
