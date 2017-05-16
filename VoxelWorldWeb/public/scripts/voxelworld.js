@@ -1,22 +1,74 @@
 var VXWORLD = (function() {
 	var self = {};
 
+	var sWidth, sHeight;
 
+	var isShiftDown=false;
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 5000 );
+	var controls;
 	var dirLight, hemiLight;
 	var mixers = [];
 	var renderer = new THREE.WebGLRenderer();
+
+	var mouse = new THREE.Vector2();
+	var raycaster = new THREE.Raycaster();
+
+	var voxels = [];
+	var objects = [];
+	var rollOverMesh, rollOverMaterial;
+	var cubeGeo, cubeMaterial;
+	var plane;
+
+	var sWidth = window.innerWidth;
+	console.log(document.getElementById("headerElement").clientHeight);
+	console.log(document.getElementById("footerElement").clientHeight);
+	var sHeight = window.innerHeight - document.getElementById("headerElement").clientHeight - document.getElementById("footerElement").clientHeight;
 	//document.getElementById("mainCanvas").domElement = renderer.domElement;
 	document.getElementById("mainCanvasContainer").appendChild( renderer.domElement );
+
+	rollOverGeo = new THREE.BoxGeometry( 1, 1, 1 );
+	rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
+	rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
+	scene.add( rollOverMesh );
+
+	cubeGeo = new THREE.BoxGeometry( 1, 1, 1 );
+	cubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
 	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 	var cube = new THREE.Mesh( geometry, material );
 	scene.add( cube );
+	objects.push(cube);
 
-	camera.position.z = 5;
-	cube.rotation.x += 0.4;
+	// grid
+	var size = 500, step = 10;
+	var geometry = new THREE.Geometry();
+	for ( var i = - size; i <= size; i += step ) {
+		geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
+		geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
+		geometry.vertices.push( new THREE.Vector3( i, 0, - size ) );
+		geometry.vertices.push( new THREE.Vector3( i, 0,   size ) );
+	}
+	var material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true } );
+	var line = new THREE.LineSegments( geometry, material );
+	scene.add( line );
+
+	// camera controls
+	/*
+	controls = new THREE.TrackballControls( camera );
+	controls.rotateSpeed = 1.0;
+	controls.zoomSpeed = 1.2;
+	controls.panSpeed = 0.8;
+	controls.noZoom = false;
+	controls.noPan = false;
+	controls.staticMoving = true;
+	controls.dynamicDampingFactor = 0.3;
+	*/
+	camera.position.set( 5, 8, 13 );
+	camera.lookAt( new THREE.Vector3() );
+	//camera.position.z = 5;
+	//cube.rotation.x += 0.4;
 
 	scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
 	scene.fog.color.setHSL( 0.6, 0, 1 );
@@ -70,10 +122,16 @@ var VXWORLD = (function() {
 	var sky = new THREE.Mesh( skyGeo, skyMat );
 	scene.add( sky );
 
+	var planegeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+	planegeometry.rotateX( - Math.PI / 2 );
+	plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
+	scene.add( plane );
+	objects.push( plane );
+
 	
 	renderer.setClearColor( scene.fog.color );
 	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( sWidth, sHeight );
 
 	renderer.gammaInput = true;
 	renderer.gammaOutput = true;
@@ -84,12 +142,98 @@ var VXWORLD = (function() {
 		
 		requestAnimationFrame( render );
 
-		cube.rotation.y += 0.016;
+		//controls.update();
+
+		//cube.rotation.y += 0.016;
 
 		renderer.render(scene, camera);
 	};
 
+	renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+	renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+	renderer.domElement.addEventListener( 'keydown', onDocumentKeyDown, false );
+	renderer.domElement.addEventListener( 'keyup', onDocumentKeyUp, false );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+
+	function onDocumentMouseMove(event) {
+		event.preventDefault();
+		mouse.set( ( event.clientX / sWidth ) * 2 - 1, - ( event.clientY / sHeight ) * 2 + 1 );
+		raycaster.setFromCamera( mouse, camera );
+		var intersects = raycaster.intersectObjects( objects );
+		console.log(intersects);
+		if ( intersects.length > 0 ) {
+
+			var intersect = intersects[ 0 ];
+			rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
+			rollOverMesh.position.divideScalar( 1 ).floor().multiplyScalar( 1 ).addScalar( 0.5 );
+		}
+		
+	}
+
+	function onDocumentMouseDown(event) {
+		event.preventDefault();
+
+		mouse.set( ( event.clientX / sWidth ) * 2 - 1, - ( event.clientY / sHeight ) * 2 + 1 );
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObjects( objects );
+
+		if ( intersects.length > 0 ) {
+			var intersect = intersects[ 0 ];
+			// delete cube
+			if ( isShiftDown ) {
+				if ( intersect.object != plane ) {
+					scene.remove( intersect.object );
+					objects.splice( objects.indexOf( intersect.object ), 1 );
+				}
+			// create cube
+			} else {
+				var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
+				voxel.position.copy( intersect.point ).add( intersect.face.normal );
+				voxel.position.divideScalar( 1 ).floor().multiplyScalar( 1 ).addScalar( 0.5 );
+				scene.add( voxel );
+				objects.push( voxel );
+			}
+			
+		}
+
+	}
+
+	function onDocumentMouseUp(event) {
+
+	}
+
+	function onDocumentKeyDown( event ) {
+		switch( event.keyCode ) {
+			case 16: isShiftDown = true; break;
+		}
+	}
+
+	function onDocumentKeyUp (event) {
+		switch( event.keyCode ) {
+			case 16: isShiftDown = false; break;
+		}
+	}
+
+	function onWindowResize() {
+		sWidth = window.innerWidth;
+		sHeight = window.innerHeight - document.getElementById("headerElement").innerHeight - document.getElementById("footerElement").innerHeight;
+		camera.aspect = sWidth / sHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( sWidth, sHeight );
+	}
+
 	render();
+
+
+	return self;
+});
+
+var VXVoxel = (function(){
+	var self = this;
+
 
 
 	return self;

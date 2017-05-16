@@ -14,11 +14,12 @@
 
 	<link rel="stylesheet" type="text/css" href="./public/style/main.css">
 	<script src="./public/scripts/lib/three.min.js"></script>
+	<script src="./public/scripts/lib/TrackballControls.js"></script>
 	<script src="./public/scripts/voxelworld.js"></script>
 	<script src="./public/scripts/main.js"></script>
 </head>
 <body ng-controller="VoxeworldMainController as controller">
-	<header><md-toolbar class="md-theme-indigo">
+	<header id="headerElement"><md-toolbar class="md-theme-indigo">
 		<div class="md-toolbar-tools">
 			<md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()">
 	        	<img src="./public/img/icons/ic_menu_white_24px.svg"></img>
@@ -47,7 +48,7 @@
 		</md-sidenav>
 		<div id="mainCanvasContainer"></div>
 	</section>
-	<footer>
+	<footer id="footerElement">
 		Voxels, a Voxelworld App
 		<br>
 		Baptiste Maréchaux - Théo Couvert 2017
