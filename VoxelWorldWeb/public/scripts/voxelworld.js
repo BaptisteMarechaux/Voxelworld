@@ -21,6 +21,7 @@ var VXWORLD = (function() {
 	var plane;
 
 	var sWidth = window.innerWidth;
+	console.log(window.innerHeight);
 	console.log(document.getElementById("headerElement").clientHeight);
 	console.log(document.getElementById("footerElement").clientHeight);
 	var sHeight = window.innerHeight - document.getElementById("headerElement").clientHeight - document.getElementById("footerElement").clientHeight;
@@ -38,8 +39,7 @@ var VXWORLD = (function() {
 	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 	var cube = new THREE.Mesh( geometry, material );
-	scene.add( cube );
-	objects.push(cube);
+	//scene.add( cube );
 
 	// grid
 	var size = 500, step = 10;
@@ -124,7 +124,7 @@ var VXWORLD = (function() {
 
 	var planegeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
 	planegeometry.rotateX( - Math.PI / 2 );
-	plane = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { visible: false } ) );
+	plane = new THREE.Mesh( planegeometry, new THREE.MeshBasicMaterial( { visible: false } ) );
 	scene.add( plane );
 	objects.push( plane );
 
@@ -159,7 +159,7 @@ var VXWORLD = (function() {
 
 	function onDocumentMouseMove(event) {
 		event.preventDefault();
-		mouse.set( ( event.clientX / sWidth ) * 2 - 1, - ( event.clientY / sHeight ) * 2 + 1 );
+		mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 		raycaster.setFromCamera( mouse, camera );
 		var intersects = raycaster.intersectObjects( objects );
 		console.log(intersects);
@@ -175,7 +175,7 @@ var VXWORLD = (function() {
 	function onDocumentMouseDown(event) {
 		event.preventDefault();
 
-		mouse.set( ( event.clientX / sWidth ) * 2 - 1, - ( event.clientY / sHeight ) * 2 + 1 );
+		mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 		raycaster.setFromCamera( mouse, camera );
 
 		var intersects = raycaster.intersectObjects( objects );
@@ -219,7 +219,7 @@ var VXWORLD = (function() {
 
 	function onWindowResize() {
 		sWidth = window.innerWidth;
-		sHeight = window.innerHeight - document.getElementById("headerElement").innerHeight - document.getElementById("footerElement").innerHeight;
+		sHeight = window.innerHeight - document.getElementById("headerElement").clientHeight - document.getElementById("footerElement").clientHeight;
 		camera.aspect = sWidth / sHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize( sWidth, sHeight );
