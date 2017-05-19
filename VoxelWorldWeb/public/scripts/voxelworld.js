@@ -42,7 +42,7 @@ var VXWORLD = (function() {
 	//scene.add( cube );
 
 	// grid
-	var size = 500, step = 10;
+	var size = 50, step = 1;
 	var geometry = new THREE.Geometry();
 	for ( var i = - size; i <= size; i += step ) {
 		geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
@@ -55,7 +55,7 @@ var VXWORLD = (function() {
 	scene.add( line );
 
 	// camera controls
-	/*
+	
 	controls = new THREE.TrackballControls( camera );
 	controls.rotateSpeed = 1.0;
 	controls.zoomSpeed = 1.2;
@@ -64,7 +64,7 @@ var VXWORLD = (function() {
 	controls.noPan = false;
 	controls.staticMoving = true;
 	controls.dynamicDampingFactor = 0.3;
-	*/
+	
 	camera.position.set( 5, 8, 13 );
 	camera.lookAt( new THREE.Vector3() );
 	//camera.position.z = 5;
@@ -142,7 +142,7 @@ var VXWORLD = (function() {
 		
 		requestAnimationFrame( render );
 
-		//controls.update();
+		controls.update();
 
 		//cube.rotation.y += 0.016;
 
@@ -150,7 +150,7 @@ var VXWORLD = (function() {
 	};
 
 	renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+	renderer.domElement.addEventListener( 'mouseup', onDocumentMouseDown, false );
 	renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 	renderer.domElement.addEventListener( 'keydown', onDocumentKeyDown, false );
 	renderer.domElement.addEventListener( 'keyup', onDocumentKeyUp, false );
@@ -167,7 +167,8 @@ var VXWORLD = (function() {
 
 			var intersect = intersects[ 0 ];
 			rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
-			rollOverMesh.position.divideScalar( 1 ).floor().multiplyScalar( 1 ).addScalar( 0.5 );
+			//rollOverMesh.position.addScalar( 0.5 );
+			rollOverMesh.position.divideScalar( 1 ).floor().multiplyScalar( 1 );//.addScalar( 0.5 );
 		}
 		
 	}
@@ -192,7 +193,7 @@ var VXWORLD = (function() {
 			} else {
 				var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
 				voxel.position.copy( intersect.point ).add( intersect.face.normal );
-				voxel.position.divideScalar( 1 ).floor().multiplyScalar( 1 ).addScalar( 0.5 );
+				voxel.position.divideScalar( 1 ).floor().multiplyScalar( 1 );//.addScalar( 0.5 );
 				scene.add( voxel );
 				objects.push( voxel );
 			}
