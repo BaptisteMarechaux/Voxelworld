@@ -28,6 +28,13 @@ var VXWORLD = (function() {
 	//document.getElementById("mainCanvas").domElement = renderer.domElement;
 	document.getElementById("mainCanvasContainer").appendChild( renderer.domElement );
 
+	var selectedColor = {
+		r : 255,
+		g : 255,
+		b : 255,
+		a : 1
+	}
+
 	rollOverGeo = new THREE.BoxGeometry( 1, 1, 1 );
 	rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
 	rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
@@ -162,7 +169,7 @@ var VXWORLD = (function() {
 		mouse.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 		raycaster.setFromCamera( mouse, camera );
 		var intersects = raycaster.intersectObjects( objects );
-		console.log(intersects);
+		//console.log(intersects);
 		if ( intersects.length > 0 ) {
 
 			var intersect = intersects[ 0 ];
@@ -191,6 +198,7 @@ var VXWORLD = (function() {
 				}
 			// create cube
 			} else {
+				console.log(cubeMaterial.color);
 				var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
 				voxel.position.copy( intersect.point ).add( intersect.face.normal );
 				voxel.position.divideScalar( 1 ).floor().multiplyScalar( 1 );//.addScalar( 0.5 );
@@ -224,6 +232,28 @@ var VXWORLD = (function() {
 		camera.aspect = sWidth / sHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize( sWidth, sHeight );
+	}
+
+	self.selectColor = function(color) {
+		console.log("selecting color");
+		selectedColor = {
+			r : color.r,
+			g : color.g,
+			b : color.b
+		}
+
+		cubeMaterial = new THREE.MeshPhongMaterial( { color: new THREE.Color("rgb("+selectedColor.r+","+selectedColor.g+","+selectedColor.b+")" ) , specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+	}
+
+	self.smoothVoxels = function (iterations) {
+
+	};
+
+	function voxelSmooth (n, position) {
+		if(n > 0)
+		{
+			
+		}
 	}
 
 	render();

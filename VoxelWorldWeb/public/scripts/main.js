@@ -4,7 +4,25 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
 	var self = this;
 
 	$scope.toggleLeft = buildToggler('left');
+    $scope.toggleColor = buildToggler('colorSide');
 
+    $scope.colors = [
+        {
+            r : 200,
+            g : 40,
+            b : 40
+        },
+        {
+            r : 40,
+            g : 200,
+            b : 40
+        },
+        {
+            r : 40,
+            g : 40,
+            b : 200
+        }
+    ];
     function buildToggler(componentId) {
       return function() {
         $mdSidenav(componentId).toggle();
@@ -15,7 +33,22 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
     	VXModule = new VXWORLD();
     };
 
-    
+    $scope.getPickableColorStyle = function(index) {
+
+        style =  {
+            "background-color" : 'rgba('+$scope.colors[index].r+','+$scope.colors[index].g+','+$scope.colors[index].b+', 1)'
+        };
+        return style;
+    }
+
+    $scope.selectColor = function(index) {
+        VXModule.selectColor(
+            {
+                r : $scope.colors[index].r,
+                g : $scope.colors[index].g,
+                b : $scope.colors[index].b
+            });
+    }
 
 })
 .config(function($mdThemingProvider) {

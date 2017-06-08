@@ -26,14 +26,21 @@
 	        </md-button>
 			<h1>V O X E L S</h1>
 			<div flex></div>
-			<md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()">
+			<md-button class="md-icon-button" aria-label="Menu" ng-click="">
+				 <md-tooltip md-direction="bottom">Copy</md-tooltip>
 	        	<img src="./public/img/icons/ic_content_copy_white_24dp_1x.png"></img>
 	        </md-button>
-	        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()">
+	        <md-button class="md-icon-button" aria-label="Menu" ng-click="">
+	        	<md-tooltip md-direction="bottom">Copy</md-tooltip>
 	        	<img src="./public/img/icons/ic_undo_white_24dp_1x.png"></img>
 	        </md-button>
-	        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleLeft()">
+	        <md-button class="md-icon-button" aria-label="Menu" ng-click="">
+	        	<md-tooltip md-direction="bottom">Copy</md-tooltip>
 	        	<img src="./public/img/icons/ic_redo_white_24dp_1x.png"></img>
+	        </md-button>
+	        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleColor()">
+	        	<md-tooltip md-direction="bottom">Colorpicker</md-tooltip>
+	        	<img src="./public/img/icons/ic_color_lens_white_24dp_1x.png"></img>
 	        </md-button>
 		</div>
 	</md-toolbar></header>
@@ -56,7 +63,26 @@
 				</md-button>
 			</md-content>
 		</md-sidenav>
+		<md-sidenav class="md-sidenav-right" md-component-id="colorSide" md-whiteframe="4">
+			<md-toolbar>
+				<h1 class="md-toolbar-tools">Colors</h1>
+			</md-toolbar>
+
+			<md-content layout-margin>
+				<md-button class="md-fab md-mini pickableColor" ng-repeat="color in colors" ng-style="getPickableColorStyle($index)" ng-click="selectColor($index)">
+
+				</md-button>
+				<md-button class="md-primary md-fab md-mini">
+				<md-icon><img src="./public/img/icons/ic_add_white_24dp_1x.png"></md-icon>
+				</md-button>
+				<br>
+				<md-button ng-click="toggleLeft()" class="md-accent">
+					Close
+				</md-button>
+			</md-content>
+		</md-sidenav>
 		<div id="mainCanvasContainer"></div>
+
 	</section>
 	<footer id="footerElement">
 		Voxels, a Voxelworld App
