@@ -35,12 +35,12 @@ var VXWORLD = (function() {
 		a : 1
 	}
 
-	rollOverGeo = new THREE.BoxGeometry( 1, 1, 1 );
+	rollOverGeo = new THREE.BoxGeometry( 10, 10, 10 );
 	rollOverMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true } );
 	rollOverMesh = new THREE.Mesh( rollOverGeo, rollOverMaterial );
 	scene.add( rollOverMesh );
 
-	cubeGeo = new THREE.BoxGeometry( 1, 1, 1 );
+	cubeGeo = new THREE.BoxGeometry( 10, 10, 10 );
 	cubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
 
 	var geometry = new THREE.BoxGeometry( 1, 1, 1 );
