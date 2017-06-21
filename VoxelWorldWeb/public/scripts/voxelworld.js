@@ -72,7 +72,7 @@ var VXWORLD = (function() {
 	controls.staticMoving = true;
 	controls.dynamicDampingFactor = 0.3;
 	
-	camera.position.set( 5, 8, 13 );
+	camera.position.set( 50, 80, 130 );
 	camera.lookAt( new THREE.Vector3() );
 	//camera.position.z = 5;
 	//cube.rotation.x += 0.4;
@@ -175,7 +175,7 @@ var VXWORLD = (function() {
 			var intersect = intersects[ 0 ];
 			rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
 			//rollOverMesh.position.addScalar( 0.5 );
-			rollOverMesh.position.divideScalar( 1 ).floor().multiplyScalar( 1 );//.addScalar( 0.5 );
+			rollOverMesh.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
 		}
 		
 	}
@@ -201,7 +201,7 @@ var VXWORLD = (function() {
 				console.log(cubeMaterial.color);
 				var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
 				voxel.position.copy( intersect.point ).add( intersect.face.normal );
-				voxel.position.divideScalar( 1 ).floor().multiplyScalar( 1 );//.addScalar( 0.5 );
+				voxel.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
 				scene.add( voxel );
 				objects.push( voxel );
 			}
@@ -262,10 +262,3 @@ var VXWORLD = (function() {
 	return self;
 });
 
-var VXVoxel = (function(){
-	var self = this;
-
-
-
-	return self;
-});
