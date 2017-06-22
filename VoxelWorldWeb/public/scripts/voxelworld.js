@@ -198,12 +198,12 @@ var VXWORLD = (function() {
 				}
 			// create cube
 			} else {
-				console.log(cubeMaterial.color);
-				var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
-				voxel.position.copy( intersect.point ).add( intersect.face.normal );
-				voxel.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
-				scene.add( voxel );
-				objects.push( voxel );
+				var sentPos = new THREE.Vector3();
+				sentPos.copy(intersect.point).add( intersect.face.normal );
+				//voxel.position.copy( intersect.point ).add( intersect.face.normal );
+				sentPos.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
+				//voxel.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
+				createVoxel(sentPos, 1);
 			}
 			
 		}
@@ -246,7 +246,22 @@ var VXWORLD = (function() {
 	}
 
 	self.smoothVoxels = function (iterations) {
+		console.log(voxels.length);
+		
+		for(var i=0;i<voxels.length;i++)
+		{
+			//6 faces
 
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 1*10-5, 0, 0 )), 0.5);
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 1*10-5, 0 )), 0.5);
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 0, 1*10-5 )), 0.5);
+
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( -1*10+5, 0, 0 )), 0.5);
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, -1*10+5, 0 )), 0.5);
+			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 0, -1*10+5 )), 0.5);
+			
+		}
+		
 	};
 
 	function voxelSmooth (n, position) {
@@ -254,6 +269,33 @@ var VXWORLD = (function() {
 		{
 			
 		}
+	}
+
+	function createVoxel(position, size)
+	{
+		//position : {x, y, z}
+		//size : Number
+		var tempCubeGeo = new THREE.BoxGeometry( size * 10, size * 10, size * 10 );
+		var tempCubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
+		var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
+		voxel.position.copy(position);
+		
+		scene.add( voxel );
+		objects.push( voxel );
+		voxels.push(voxel);
+	}
+
+	function createSmoothVoxel(position, size)
+	{
+		var tempCubeGeo = new THREE.BoxGeometry( size * 10, size * 10, size * 10 );
+		var tempCubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+
+		var voxel = new THREE.Mesh( tempCubeGeo, tempCubeMaterial );
+		voxel.position.copy(position);
+		
+		scene.add( voxel );
+		
 	}
 
 	render();

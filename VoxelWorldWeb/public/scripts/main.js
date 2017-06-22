@@ -6,6 +6,8 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
 	$scope.toggleLeft = buildToggler('left');
     $scope.toggleColor = buildToggler('colorSide');
 
+    $scope.smoothIterations=1;
+
     $scope.colors = [
         {
             r : 200,
@@ -48,6 +50,19 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
                 g : $scope.colors[index].g,
                 b : $scope.colors[index].b
             });
+    }
+
+    $scope.smoothVoxels = function()
+    {
+        VXModule.smoothVoxels($scope.smoothIterations);
+    }
+
+    $scope.saveVoxels = function() {
+        console.log("saving");
+    }
+
+    $scope.LoadVoxels = function() {
+        console.log("loading");
     }
 
 })

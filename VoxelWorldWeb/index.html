@@ -51,10 +51,24 @@
 			</md-toolbar>
 
 			<md-content layout-margin>
+				Iterations
+				<md-input-container>
+			        <input flex type="number" min="1" max="5" ng-model="smoothIterations" aria-label="smoothITer">
+			    </md-input-container>
 				<ul class="wallMenu">
 	        		<li>
 	        			<menu-link class="ng-isolate-scope">
-	        				<a class="md-button md-ink-ripple" ng-click="">Smooth Voxels</a>
+	        				<a class="md-button md-ink-ripple" ng-click="smoothVoxels()">Smooth Voxels</a>
+	        			</menu-link>
+	        		</li>
+	        		<li>
+	        			<menu-link class="ng-isolate-scope">
+	        				<a class="md-button md-ink-ripple" ng-click="loadVoxels()">Load</a>
+	        			</menu-link>
+	        		</li>
+	        		<li>
+	        			<menu-link class="ng-isolate-scope">
+	        				<a class="md-button md-ink-ripple" ng-click="saveVoxels()">Save</a>
 	        			</menu-link>
 	        		</li>
 	        	</ul>
