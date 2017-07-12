@@ -58,10 +58,11 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
     }
 
     $scope.saveVoxels = function() {
-        console.log("saving");
+        VXModule.saveVoxels();
     }
 
     $scope.LoadVoxels = function() {
+        VXModule.loadVoxels('lamp.obj');
         console.log("loading");
     }
 
