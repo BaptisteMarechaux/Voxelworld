@@ -15,8 +15,12 @@
 	<link rel="stylesheet" type="text/css" href="./public/style/main.css">
 	<script src="./public/scripts/lib/three.min.js"></script>
 	<script src="./public/scripts/lib/TrackballControls.js"></script>
+	<script src="./public/scripts/lib/ImprovedNoise.js"></script>
+	<script src="./public/scripts/VoxelObject.js"></script>		
+	<script src="./public/scripts/terraingenerator.js"></script>																						
 	<script src="./public/scripts/voxelworld.js"></script>
 	<script src="./public/scripts/main.js"></script>
+	
 </head>
 <body ng-controller="VoxeworldMainController as controller">
 	<header id="headerElement"><md-toolbar class="md-theme-indigo">
@@ -31,11 +35,11 @@
 	        	<img src="./public/img/icons/ic_content_copy_white_24dp_1x.png"></img>
 	        </md-button>
 	        <md-button class="md-icon-button" aria-label="Menu" ng-click="">
-	        	<md-tooltip md-direction="bottom">Copy</md-tooltip>
+	        	<md-tooltip md-direction="bottom">Undo</md-tooltip>
 	        	<img src="./public/img/icons/ic_undo_white_24dp_1x.png"></img>
 	        </md-button>
 	        <md-button class="md-icon-button" aria-label="Menu" ng-click="">
-	        	<md-tooltip md-direction="bottom">Copy</md-tooltip>
+	        	<md-tooltip md-direction="bottom">Redo</md-tooltip>
 	        	<img src="./public/img/icons/ic_redo_white_24dp_1x.png"></img>
 	        </md-button>
 	        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleColor()">
@@ -59,6 +63,11 @@
 	        		<li>
 	        			<menu-link class="ng-isolate-scope">
 	        				<a class="md-button md-ink-ripple" ng-click="smoothVoxels()">Smooth Voxels</a>
+	        			</menu-link>
+	        		</li>
+	        		<li>
+	        			<menu-link class="ng-isolate-scope">
+	        				<a class="md-button md-ink-ripple" ng-click="generateTerrain()">Generate Terrain</a>
 	        			</menu-link>
 	        		</li>
 	        		<li>

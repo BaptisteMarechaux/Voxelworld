@@ -65,6 +65,10 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
         console.log("loading");
     }
 
+    $scope.generateTerrain = function () {
+        VXModule.generateTerrain();
+    }
+
 })
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')

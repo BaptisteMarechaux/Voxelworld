@@ -49,7 +49,7 @@ var VXWORLD = (function() {
 	//scene.add( cube );
 
 	// grid
-	var size = 50, step = 1;
+	var size = 100, step = 10;
 	var geometry = new THREE.Geometry();
 	for ( var i = - size; i <= size; i += step ) {
 		geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
@@ -129,7 +129,7 @@ var VXWORLD = (function() {
 	var sky = new THREE.Mesh( skyGeo, skyMat );
 	scene.add( sky );
 
-	var planegeometry = new THREE.PlaneBufferGeometry( 1000, 1000 );
+	var planegeometry = new THREE.PlaneBufferGeometry( 200, 200 );
 	planegeometry.rotateX( - Math.PI / 2 );
 	plane = new THREE.Mesh( planegeometry, new THREE.MeshBasicMaterial( { visible: false } ) );
 	scene.add( plane );
@@ -144,6 +144,10 @@ var VXWORLD = (function() {
 	renderer.gammaOutput = true;
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.renderReverseSided = false;
+
+	var worldWidth = 20, worldDepth = 20,
+	worldHalfWidth = worldWidth / 2, worldHalfDepth = worldDepth / 2,
+	data = generateHeight( worldWidth, worldDepth );
 
 	var render = function () {
 		
@@ -247,43 +251,272 @@ var VXWORLD = (function() {
 
 	self.smoothVoxels = function (iterations) {
 		console.log(voxels.length);
-		
+
+		var possibilities = [];
+
+
 		for(var i=0;i<voxels.length;i++)
 		{
-			//6 faces
+			//Ckeck every possibility of adjacence
+			//Top
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[0] == 1)
+			{
+				if(voxels[i].adjacence[6] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z - voxels[i].size + voxels[i].size/4});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[1] == 1)
+			{
+				if(voxels[i].adjacence[7] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x - voxels[i].size/4, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[2] == 1)
+			{
+				if(voxels[i].adjacence[8] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x + voxels[i].size - voxels[i].size/4, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[3] == 1)
+			{
+				if(voxels[i].adjacence[9] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z + voxels[i].size - voxels[i].size/4});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[6] == 1)
+			{
+				if(voxels[i].adjacence[0] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[7] == 1)
+			{
+				if(voxels[i].adjacence[1] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[8] == 1)
+			{
+				if(voxels[i].adjacence[2] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[9] == 1)
+			{
+				if(voxels[i].adjacence[3] == 0)
+				{
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y + voxels[i].size - voxels[i].size/4, z: voxels[i].geometry.position.z});
+				}
+			}
 
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 1*10-5, 0, 0 )), 0.5);
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 1*10-5, 0 )), 0.5);
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 0, 1*10-5 )), 0.5);
+			//Bottom
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[0] == 1)
+			{
+				if(voxels[i].adjacence[6] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[1] == 1)
+			{
+				if(voxels[i].adjacence[7] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[2] == 1)
+			{
+				if(voxels[i].adjacence[8] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[3] == 1)
+			{
+				if(voxels[i].adjacence[9] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[10] == 1)
+			{
+				if(voxels[i].adjacence[0] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[11] == 1)
+			{
+				if(voxels[i].adjacence[1] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[12] == 1)
+			{
+				if(voxels[i].adjacence[2] == 0)
+				{
+					
+				}
+			}
+			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[13] == 1)
+			{
+				if(voxels[i].adjacence[3] == 0)
+				{
+					
+				}
+			}
 
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( -1*10+5, 0, 0 )), 0.5);
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, -1*10+5, 0 )), 0.5);
-			createSmoothVoxel(new THREE.Vector3().copy(voxels[i].position).add(new THREE.Vector3( 0, 0, -1*10+5 )), 0.5);
-			
+		}
+
+		console.log(possibilities);
+
+		for(var a = 0;a < possibilities.length; a ++)
+		{
+			createSmoothVoxel(possibilities[a], 0.5);
 		}
 		
 	};
 
-	function voxelSmooth (n, position) {
-		if(n > 0)
-		{
-			
-		}
-	}
 
 	function createVoxel(position, size)
 	{
 		//position : {x, y, z}
 		//size : Number
-		var tempCubeGeo = new THREE.BoxGeometry( size * 10, size * 10, size * 10 );
-		var tempCubeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-
-		var voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
-		voxel.position.copy(position);
 		
-		scene.add( voxel );
-		objects.push( voxel );
+		var voxel = new VXVoxel(position, size);
+		scene.add( voxel.geometry );
+		objects.push( voxel.geometry );
 		voxels.push(voxel);
+		//console.log(voxels);
+		for(var v=0; v < voxels.length; v++)
+		{
+			setAdjacenceOnVoxel(voxels[v]);
+		}
+	}
+
+	function setAdjacenceOnVoxel(vox)
+	{
+		//console.log(vox);
+		var voxPos = vox.geometry.position;
+		var voxSize = vox.size;
+		//console.log(voxPos);
+
+		searchPos = {x : voxPos.x, y : voxPos.y, z : voxPos.z};
+
+		//Front
+		searchPos = {x : voxPos.x, y : voxPos.y, z : voxPos.z - voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[0] = 1;
+		}
+
+		//Left
+		searchPos = {x : voxPos.x - voxSize, y : voxPos.y, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[1] = 1;
+		}
+
+		//Right
+		searchPos = {x : voxPos.x + voxSize, y : voxPos.y, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[2] = 1;
+		}
+
+		//Back
+		searchPos = {x : voxPos.x, y : voxPos.y, z : voxPos.z + voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[3] = 1;
+		}
+
+		//Top
+		searchPos = {x : voxPos.x, y : voxPos.y + voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[4] = 1;
+		}
+
+		//Bottom
+		searchPos = {x : voxPos.x, y : voxPos.y - voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[5] = 1;
+		}
+
+
+		//Top Front
+		searchPos = {x : voxPos.x, y : voxPos.y + voxSize, z : voxPos.z - voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[6] = 1;
+		}
+
+		//Top Left
+		searchPos = {x : voxPos.x - voxSize, y : voxPos.y + voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[7] = 1;
+		}
+
+		//Top Right
+		searchPos = {x : voxPos.x + voxSize, y : voxPos.y + voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[8] = 1;
+		}
+
+		//Top Back
+		searchPos = {x : voxPos.x, y : voxPos.y + voxSize, z : voxPos.z + voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[9] = 1;
+		}
+
+		//Bottom Front
+		searchPos = {x : voxPos.x, y : voxPos.y - voxSize, z : voxPos.z - voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[10] = 1;
+		}
+
+		//Bottom Left
+		searchPos = {x : voxPos.x - 1, y : voxPos.y - voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[11] = 1;
+		}
+
+		//Bottom Right
+		searchPos = {x : voxPos.x + 1, y : voxPos.y - voxSize, z : voxPos.z};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[12] = 1;
+		}
+
+		//Bottom Back
+		searchPos = {x : voxPos.x, y : voxPos.y - voxSize, z : voxPos.z + voxSize};
+		if(isObjectAtPosition(searchPos))
+		{
+			vox.adjacence[13] = 1;
+		}
+
+		//console.log(voxels[0].adjacence);
+
+	}
+
+	function checkAdjacenceOnVoxel(vox)
+	{
+
 	}
 
 	function createSmoothVoxel(position, size)
@@ -296,6 +529,85 @@ var VXWORLD = (function() {
 		
 		scene.add( voxel );
 		
+	}
+
+	function findObjectsInPositionRange(pos, range /*array with 2 indices*/)
+	{
+		var foundObjects = [];
+		var o = {};
+		for(var i=range[0].x;i<range[1].x;i++)
+		{
+			for(var j=range[0].y;j<range[1].y;j++)
+			{
+				for(var k=range[0].z;k<range[1].z;k++)
+				{
+					o = getObjectAtPosition({
+						x : i,
+						y : j,
+						z : k
+					});
+
+					if(o != undefined)
+					{
+						
+					}
+				}
+			}
+		}
+	}
+
+	
+
+	
+
+	function isObjectAtPosition(pos)
+	{
+		for(var i=0;i<objects.length;i++)
+		{
+			if(objects[i].position.x === pos.x && objects[i].position.y === pos.y && objects[i].position.z === pos.z)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function getObjectAtPosition(pos)
+	{
+
+	}
+
+	function saveVoxelsToObj() {
+
+	}
+
+	self.generateTerrain = function()
+	{
+		for(var i=0;i<worldWidth;i++)
+		{
+			for(var j=0;j<worldWidth;j++)
+			{
+				createVoxel({x : (j-worldWidth/2) * 10, y : getY(j, i) * 10, z : (i-worldWidth/2) * 10}, 1);
+			}
+		}
+	}
+
+	function generateHeight ( width, height ) {
+		var data = [], perlin = new ImprovedNoise();
+		var size = width * height, quality = 2, z = Math.random() * 100;
+		for ( var j = 0; j < 4; j ++ ) {
+			if ( j === 0 ) for ( var i = 0; i < size; i ++ ) data[ i ] = 0;
+			for ( var i = 0; i < size; i ++ ) {
+				var x = i % width, y = ( i / width ) | 0;
+				data[ i ] += perlin.noise( x / quality, y / quality, z ) * quality;
+			}
+			quality *= 4;
+		}
+		return data;
+	}
+
+	function getY( x, z ) {
+		return ( data[ x + z * worldWidth ] * 0.2 ) | 0;
 	}
 
 	render();
