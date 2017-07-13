@@ -20,6 +20,8 @@ var VXWORLD = (function() {
 	var cubeGeo, cubeMaterial;
 	var plane;
 
+	var selectingColor = false;
+
 	var sWidth = window.innerWidth;
 	console.log(window.innerHeight);
 	console.log(document.getElementById("headerElement").clientHeight);
@@ -202,12 +204,21 @@ var VXWORLD = (function() {
 				}
 			// create cube
 			} else {
-				var sentPos = new THREE.Vector3();
-				sentPos.copy(intersect.point).add( intersect.face.normal );
-				//voxel.position.copy( intersect.point ).add( intersect.face.normal );
-				sentPos.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
-				//voxel.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
-				createVoxel(sentPos, 1);
+				if(selectingColor)
+				{
+					console.log(intersect);
+					intersect.object.material = new THREE.MeshPhongMaterial( { color: new THREE.Color("rgb("+selectedColor.r+","+selectedColor.g+","+selectedColor.b+")" ) , specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+				}
+				else
+				{
+					var sentPos = new THREE.Vector3();
+					sentPos.copy(intersect.point).add( intersect.face.normal );
+					//voxel.position.copy( intersect.point ).add( intersect.face.normal );
+					sentPos.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
+					//voxel.position.divideScalar( 10 ).floor().multiplyScalar( 10 ).addScalar( 5 );
+					createVoxel(sentPos, 1);
+				}
+				
 			}
 			
 		}
@@ -317,60 +328,60 @@ var VXWORLD = (function() {
 			}
 
 			//Bottom
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[0] == 1)
+			if(voxels[i].adjacence[5] == 1 && voxels[i].adjacence[0] == 1)
 			{
 				if(voxels[i].adjacence[6] == 0)
 				{
 					
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[1] == 1)
+			if(voxels[i].adjacence[5] == 1 && voxels[i].adjacence[1] == 1)
 			{
 				if(voxels[i].adjacence[7] == 0)
 				{
 					
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[2] == 1)
+			if(voxels[i].adjacence[5] == 1 && voxels[i].adjacence[2] == 1)
 			{
 				if(voxels[i].adjacence[8] == 0)
 				{
 					
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[3] == 1)
+			if(voxels[i].adjacence[5] == 1 && voxels[i].adjacence[3] == 1)
 			{
 				if(voxels[i].adjacence[9] == 0)
 				{
 					
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[10] == 1)
+			if(voxels[i].adjacence[10] == 1)
 			{
 				if(voxels[i].adjacence[0] == 0)
 				{
-					
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y - voxels[i].size/4, z: voxels[i].geometry.position.z - voxels[i].size + voxels[i].size/4});
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[11] == 1)
+			if(voxels[i].adjacence[11] == 1)
 			{
 				if(voxels[i].adjacence[1] == 0)
 				{
-					
+					possibilities.push({x: voxels[i].geometry.position.x - voxels[i].size/4, y: voxels[i].geometry.position.y - voxels[i].size/4, z: voxels[i].geometry.position.z});
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[12] == 1)
+			if(voxels[i].adjacence[12] == 1)
 			{
 				if(voxels[i].adjacence[2] == 0)
 				{
-					
+					possibilities.push({x: voxels[i].geometry.position.x - voxels[i].size/4, y: voxels[i].geometry.position.y - voxels[i].size + voxels[i].size/4, z: voxels[i].geometry.position.z});
 				}
 			}
-			if(voxels[i].adjacence[4] == 1 && voxels[i].adjacence[13] == 1)
+			if(voxels[i].adjacence[13] == 1)
 			{
 				if(voxels[i].adjacence[3] == 0)
 				{
-					
+					possibilities.push({x: voxels[i].geometry.position.x, y: voxels[i].geometry.position.y - voxels[i].size/4, z: voxels[i].geometry.position.z + voxels[i].size - voxels[i].size/4});
 				}
 			}
 
@@ -587,9 +598,11 @@ var VXWORLD = (function() {
 		{
 			for(var j=0;j<worldWidth;j++)
 			{
-				createVoxel({x : (j-worldWidth/2) * 10, y : getY(j, i) * 10, z : (i-worldWidth/2) * 10}, 1);
+				createVoxel({x : (j+0.5-worldWidth/2) * 10, y : getY(j, i) * 10 , z : (i+0.5-worldWidth/2) * 10}, 1);
 			}
 		}
+
+		console.log(voxels);
 	}
 
 	function generateHeight ( width, height ) {
@@ -608,6 +621,15 @@ var VXWORLD = (function() {
 
 	function getY( x, z ) {
 		return ( data[ x + z * worldWidth ] * 0.2 ) | 0;
+	}
+
+	self.deleteAllVoxels = function() {
+		objects.splice(1, objects.length-1);
+		voxels.splice(0, voxels.length);
+	}
+
+	self.switchSelectingColorMode = function() {
+		selectingColor = !selectingColor;
 	}
 
 	render();

@@ -36,11 +36,16 @@ var VXVoxel = function(position, voxelSize){
 
 		self.geometry = new THREE.Mesh( tempCubeGeo, tempCubeMaterial );
 		self.geometry.position.copy(pos);
+		self.geometry.name = "voxelObject";
 	}
 
 	self.setAdjacence = function() {
 
 	};
+
+	self.changeColor = function(selectedColor) {
+		geometry.material = new THREE.MeshPhongMaterial( { color: new THREE.Color("rgb("+selectedColor.r+","+selectedColor.g+","+selectedColor.b+")" ) , specular: 0xffffff, shininess: 20, morphTargets: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+	}
 
 	console.log(position);
 	init(position);

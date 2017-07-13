@@ -8,7 +8,14 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
 
     $scope.smoothIterations=1;
 
+    $scope.colorMode = false;
+
     $scope.colors = [
+        {
+            r : 255,
+            g : 255,
+            b : 255
+        },
         {
             r : 200,
             g : 40,
@@ -23,7 +30,27 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
             r : 40,
             g : 40,
             b : 200
-        }
+        },
+        {
+            r : 10,
+            g : 10,
+            b : 10
+        },
+        {
+            r : 255,
+            g : 102,
+            b : 0
+        },
+        {
+            r : 255,
+            g : 255,
+            b : 40
+        },
+        {
+            r : 204,
+            g : 103,
+            b : 255
+        },
     ];
     function buildToggler(componentId) {
       return function() {
@@ -67,6 +94,30 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
 
     $scope.generateTerrain = function () {
         VXModule.generateTerrain();
+    }
+
+    $scope.deleteAllVoxels = function () {
+        VXModule.deleteAllVoxels();
+    };
+
+    $scope.switchSelectingColorMode = function () {
+        $scope.colorMode = !$scope.colorMode;
+        VXModule.switchSelectingColorMode();
+    };
+
+    $scope.getColorMoedButtonStyle = function() {
+        if($scope.colorMode)
+        {
+            return {
+                'opacity' :  '0.5'
+            }
+        }
+        else
+        {
+            return {
+                'opacity' :  '1'
+            }
+        }
     }
 
 })

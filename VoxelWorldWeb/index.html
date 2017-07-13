@@ -30,10 +30,15 @@
 	        </md-button>
 			<h1>V O X E L S</h1>
 			<div flex></div>
-			<md-button class="md-icon-button" aria-label="Menu" ng-click="">
-				 <md-tooltip md-direction="bottom">Copy</md-tooltip>
-	        	<img src="./public/img/icons/ic_content_copy_white_24dp_1x.png"></img>
+			<md-button class="md-icon-button" aria-label="Menu" ng-click="switchSelectingColorMode()">
+				 <md-tooltip md-direction="bottom">Edit Color Mode</md-tooltip>
+	        	<img src="./public/img/icons/ic_create_white_48dp_1x.png"></img>
 	        </md-button>
+			<md-button class="md-icon-button" aria-label="Menu" ng-click="deleteAllVoxels()">
+				 <md-tooltip md-direction="bottom">Clear</md-tooltip>
+	        	<img src="./public/img/icons/ic_clear_white_24dp_1x.png"></img>
+	        </md-button>
+	        <!---
 	        <md-button class="md-icon-button" aria-label="Menu" ng-click="">
 	        	<md-tooltip md-direction="bottom">Undo</md-tooltip>
 	        	<img src="./public/img/icons/ic_undo_white_24dp_1x.png"></img>
@@ -42,6 +47,7 @@
 	        	<md-tooltip md-direction="bottom">Redo</md-tooltip>
 	        	<img src="./public/img/icons/ic_redo_white_24dp_1x.png"></img>
 	        </md-button>
+	        -->
 	        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleColor()">
 	        	<md-tooltip md-direction="bottom">Colorpicker</md-tooltip>
 	        	<img src="./public/img/icons/ic_color_lens_white_24dp_1x.png"></img>
