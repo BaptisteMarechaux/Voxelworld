@@ -298,27 +298,21 @@ var VXWORLD = (function() {
 		
 	}
         
-        function saveVoxels(){
+        self.saveVoxels = function(){
+            window.open(page,"nom_popup","menubar=no, status=no, scrollbars=no, menubar=no, width=200, height=100");
             var exporter = new THREE.OBJExporter();
             var data = exporter.parse(geometry);
             var bb = new BlobBuilder();
             bb.append((new XMLSerializer).serializeToString(data));
             var blob = bb.getBlob("application/text;charset=" + data.characterSet);
             saveAs(blob, "test.obj");
-        }
+        };
         
-        function loadVoxels() {
-            var loader = new THREE.OBJLoader();
+        self.loadVoxels = function() {
+            var gl = canvas.getContext('webgl');
+            var objStr = 'lamp.obj'.getElementById().innerHTML;
+            var mesh = new OBJ.Mesh(objStr);
 
-            // load a resource
-            loader.load(
-                // resource URL
-                'lamp.obj',
-		// Function when resource is loaded
-		function ( object ) {
-			scene.add( object );
-		}
-            );
         }
         
         /*function loadMeshData(string) {
@@ -328,55 +322,55 @@ var VXWORLD = (function() {
             var vertices = [];
 
             for ( var i = 0 ; i < lines.length ; i++ ) {
-              var parts = lines[i].trimRight().split(' ');
-              if ( parts.length > 0 ) {
-                switch(parts[0]) {
-                  case 'v':  positions.push(
-                    vec3.fromValues(
-                      parseFloat(parts[1]),
-                      parseFloat(parts[2]),
-                      parseFloat(parts[3])
-                    ));
-                    break;
-                  case 'vn':
-                    normals.push(
-                      vec3.fromValues(
-                        parseFloat(parts[1]),
-                        parseFloat(parts[2]),
-                        parseFloat(parts[3])));
-                    break;
-                  case 'f': {
-                    var f1 = parts[1].split('/');
-                    var f2 = parts[2].split('/');
-                    var f3 = parts[3].split('/');
-                    Array.prototype.push.apply(
-                      vertices, positions[parseInt(f1[0]) - 1]);
-                    Array.prototype.push.apply(
-                      vertices, normals[parseInt(f1[2]) - 1]);
-                    Array.prototype.push.apply(
-                      vertices, positions[parseInt(f2[0]) - 1]);
-                    Array.prototype.push.apply(
-                      vertices, normals[parseInt(f2[2]) - 1]);
-                    Array.prototype.push.apply(
-                      vertices, positions[parseInt(f3[0]) - 1]);
-                    Array.prototype.push.apply(
-                      vertices, normals[parseInt(f3[2]) - 1]);
-                    break;
+                var parts = lines[i].trimRight().split(' ');
+                if ( parts.length > 0 ) {
+                    switch(parts[0]) {
+                        case 'v':  positions.push(
+                          vec3.fromValues(
+                            parseFloat(parts[1]),
+                            parseFloat(parts[2]),
+                            parseFloat(parts[3])
+                          ));
+                          break;
+                        case 'vn':
+                            normals.push(
+                                vec3.fromValues(
+                                    parseFloat(parts[1]),
+                                    parseFloat(parts[2]),
+                                    parseFloat(parts[3])));
+                            break;
+                        case 'f': {
+                            var f1 = parts[1].split('/');
+                            var f2 = parts[2].split('/');
+                            var f3 = parts[3].split('/');
+                            Array.prototype.push.apply(
+                              vertices, positions[parseInt(f1[0]) - 1]);
+                            Array.prototype.push.apply(
+                              vertices, normals[parseInt(f1[2]) - 1]);
+                            Array.prototype.push.apply(
+                              vertices, positions[parseInt(f2[0]) - 1]);
+                            Array.prototype.push.apply(
+                              vertices, normals[parseInt(f2[2]) - 1]);
+                            Array.prototype.push.apply(
+                              vertices, positions[parseInt(f3[0]) - 1]);
+                            Array.prototype.push.apply(
+                              vertices, normals[parseInt(f3[2]) - 1]);
+                            break;
                   }
                 }
               }
             }
             console.log(
-              "Loaded mesh with " + (vertices.length / 6) + " vertices");
+                "Loaded mesh with " + (vertices.length / 6) + " vertices");
             return {
-              primitiveType: 'TRIANGLES',
-              vertices: new Float32Array(vertices),
-              vertexCount: vertices.length / 6,
-              material: {ambient: 0.2, diffuse: 0.5, shininess: 10.0}
+                primitiveType: 'TRIANGLES',
+                vertices: new Float32Array(vertices),
+                vertexCount: vertices.length / 6,
+                material: {ambient: 0.2, diffuse: 0.5, shininess: 10.0}
             };
         }
  
-        function loadVoxels(filename) {
+        self.loadVoxels = function(filename) {
             $.ajax({
               url: filename,
               dataType: 'text'
@@ -385,7 +379,7 @@ var VXWORLD = (function() {
             }).fail(function() {
               alert('Faild to retrieve [' + filename + "]");
             });
-        }*/
+        };*/
 
 	render();
 

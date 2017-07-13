@@ -1,4 +1,3 @@
-
 angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
 .controller('VoxeworldMainController', function($scope, $sce, $interval, $log, $mdDialog, $mdToast, $mdSidenav) {
 	var self = this;
@@ -58,12 +57,13 @@ angular.module('VoxeworldApp', ['ngMaterial',"ngSanitize"])
     }
 
     $scope.saveVoxels = function() {
-        VXModule.saveVoxels();
+        //VXModule.saveVoxels();
+        console.log("save");
     }
 
-    $scope.LoadVoxels = function() {
-        VXModule.loadVoxels('lamp.obj');
-        console.log("loading");
+    $scope.loadVoxels = function() {
+        VXModule.loadVoxels();
+        
     }
 
 })

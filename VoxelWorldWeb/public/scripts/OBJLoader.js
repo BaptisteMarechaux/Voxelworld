@@ -2,259 +2,369 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.OBJExporter = function () {};
+THREE.OBJLoader = function ( manager ) {
 
-THREE.OBJExporter.prototype = {
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
 
-	constructor: THREE.OBJExporter,
+};
 
-	parse: function ( object ) {
+THREE.OBJLoader.prototype = {
 
-		var output = '';
+	constructor: THREE.OBJLoader,
 
-		var indexVertex = 0;
-		var indexVertexUvs = 0;
-		var indexNormals = 0;
+	load: function ( url, onLoad, onProgress, onError ) {
 
-		var vertex = new THREE.Vector3();
-		var normal = new THREE.Vector3();
-		var uv = new THREE.Vector2();
+		var scope = this;
 
-		var i, j, k, l, m, face = [];
+		var loader = new THREE.XHRLoader( scope.manager );
+		loader.setCrossOrigin( this.crossOrigin );
+		loader.load( url, function ( text ) {
 
-		var parseMesh = function ( mesh ) {
+			onLoad( scope.parse( text ) );
 
-			var nbVertex = 0;
-			var nbNormals = 0;
-			var nbVertexUvs = 0;
+		}, onProgress, onError );
 
-			var geometry = mesh.geometry;
+	},
 
-			var normalMatrixWorld = new THREE.Matrix3();
+	parse: function ( text ) {
 
-			if ( geometry instanceof THREE.Geometry ) {
+		console.time( 'OBJLoader' );
 
-				geometry = new THREE.BufferGeometry().setFromObject( mesh );
+		var object, objects = [];
+		var geometry, material;
+
+		function parseVertexIndex( value ) {
+
+			var index = parseInt( value );
+
+			return ( index >= 0 ? index - 1 : index + vertices.length / 3 ) * 3;
+
+		}
+
+		function parseNormalIndex( value ) {
+
+			var index = parseInt( value );
+
+			return ( index >= 0 ? index - 1 : index + normals.length / 3 ) * 3;
+
+		}
+
+		function parseUVIndex( value ) {
+
+			var index = parseInt( value );
+
+			return ( index >= 0 ? index - 1 : index + uvs.length / 2 ) * 2;
+
+		}
+
+		function addVertex( a, b, c ) {
+
+			geometry.vertices.push(
+				vertices[ a ], vertices[ a + 1 ], vertices[ a + 2 ],
+				vertices[ b ], vertices[ b + 1 ], vertices[ b + 2 ],
+				vertices[ c ], vertices[ c + 1 ], vertices[ c + 2 ]
+			);
+
+		}
+
+		function addNormal( a, b, c ) {
+
+			geometry.normals.push(
+				normals[ a ], normals[ a + 1 ], normals[ a + 2 ],
+				normals[ b ], normals[ b + 1 ], normals[ b + 2 ],
+				normals[ c ], normals[ c + 1 ], normals[ c + 2 ]
+			);
+
+		}
+
+		function addUV( a, b, c ) {
+
+			geometry.uvs.push(
+				uvs[ a ], uvs[ a + 1 ],
+				uvs[ b ], uvs[ b + 1 ],
+				uvs[ c ], uvs[ c + 1 ]
+			);
+
+		}
+
+		function addFace( a, b, c, d,  ua, ub, uc, ud,  na, nb, nc, nd ) {
+
+			var ia = parseVertexIndex( a );
+			var ib = parseVertexIndex( b );
+			var ic = parseVertexIndex( c );
+
+			if ( d === undefined ) {
+
+				addVertex( ia, ib, ic );
+
+			} else {
+
+				var id = parseVertexIndex( d );
+
+				addVertex( ia, ib, id );
+				addVertex( ib, ic, id );
 
 			}
 
-			if ( geometry instanceof THREE.BufferGeometry ) {
+			if ( ua !== undefined ) {
 
-				// shortcuts
-				var vertices = geometry.getAttribute( 'position' );
-				var normals = geometry.getAttribute( 'normal' );
-				var uvs = geometry.getAttribute( 'uv' );
-				var indices = geometry.getIndex();
+				var ia = parseUVIndex( ua );
+				var ib = parseUVIndex( ub );
+				var ic = parseUVIndex( uc );
 
-				// name of the mesh object
-				output += 'o ' + mesh.name + '\n';
+				if ( d === undefined ) {
 
-				// name of the mesh material
-				if ( mesh.material && mesh.material.name ) {
-					output += 'usemtl ' + mesh.material.name + '\n';
-				}
-
-				// vertices
-
-				if( vertices !== undefined ) {
-
-					for ( i = 0, l = vertices.count; i < l; i ++, nbVertex++ ) {
-
-						vertex.x = vertices.getX( i );
-						vertex.y = vertices.getY( i );
-						vertex.z = vertices.getZ( i );
-
-						// transfrom the vertex to world space
-						vertex.applyMatrix4( mesh.matrixWorld );
-
-						// transform the vertex to export format
-						output += 'v ' + vertex.x + ' ' + vertex.y + ' ' + vertex.z + '\n';
-
-					}
-
-				}
-
-				// uvs
-
-				if( uvs !== undefined ) {
-
-					for ( i = 0, l = uvs.count; i < l; i ++, nbVertexUvs++ ) {
-
-						uv.x = uvs.getX( i );
-						uv.y = uvs.getY( i );
-
-						// transform the uv to export format
-						output += 'vt ' + uv.x + ' ' + uv.y + '\n';
-
-					}
-
-				}
-
-				// normals
-
-				if( normals !== undefined ) {
-
-					normalMatrixWorld.getNormalMatrix( mesh.matrixWorld );
-
-					for ( i = 0, l = normals.count; i < l; i ++, nbNormals++ ) {
-
-						normal.x = normals.getX( i );
-						normal.y = normals.getY( i );
-						normal.z = normals.getZ( i );
-
-						// transfrom the normal to world space
-						normal.applyMatrix3( normalMatrixWorld );
-
-						// transform the normal to export format
-						output += 'vn ' + normal.x + ' ' + normal.y + ' ' + normal.z + '\n';
-
-					}
-
-				}
-
-				// faces
-
-				if( indices !== null ) {
-
-					for ( i = 0, l = indices.count; i < l; i += 3 ) {
-
-						for( m = 0; m < 3; m ++ ){
-
-							j = indices.getX( i + m ) + 1;
-
-							face[ m ] = ( indexVertex + j ) + '/' + ( uvs ? ( indexVertexUvs + j ) : '' ) + '/' + ( indexNormals + j );
-
-						}
-
-						// transform the face to export format
-						output += 'f ' + face.join( ' ' ) + "\n";
-
-					}
+					addUV( ia, ib, ic );
 
 				} else {
 
-					for ( i = 0, l = vertices.count; i < l; i += 3 ) {
+					var id = parseUVIndex( ud );
 
-						for( m = 0; m < 3; m ++ ){
-
-							j = i + m + 1;
-
-							face[ m ] = ( indexVertex + j ) + '/' + ( uvs ? ( indexVertexUvs + j ) : '' ) + '/' + ( indexNormals + j );
-
-						}
-
-						// transform the face to export format
-						output += 'f ' + face.join( ' ' ) + "\n";
-
-					}
+					addUV( ia, ib, id );
+					addUV( ib, ic, id );
 
 				}
+
+			}
+
+			if ( na !== undefined ) {
+
+				var ia = parseNormalIndex( na );
+				var ib = parseNormalIndex( nb );
+				var ic = parseNormalIndex( nc );
+
+				if ( d === undefined ) {
+
+					addNormal( ia, ib, ic );
+
+				} else {
+
+					var id = parseNormalIndex( nd );
+
+					addNormal( ia, ib, id );
+					addNormal( ib, ic, id );
+
+				}
+
+			}
+
+		}
+
+		// create mesh if no objects in text
+
+		if ( /^o /gm.test( text ) === false ) {
+
+			geometry = {
+				vertices: [],
+				normals: [],
+				uvs: []
+			};
+
+			material = {
+				name: ''
+			};
+
+			object = {
+				name: '',
+				geometry: geometry,
+				material: material
+			};
+
+			objects.push( object );
+
+		}
+
+		var vertices = [];
+		var normals = [];
+		var uvs = [];
+
+		// v float float float
+
+		var vertex_pattern = /v( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+		// vn float float float
+
+		var normal_pattern = /vn( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+		// vt float float
+
+		var uv_pattern = /vt( +[\d|\.|\+|\-|e|E]+)( +[\d|\.|\+|\-|e|E]+)/;
+
+		// f vertex vertex vertex ...
+
+		var face_pattern1 = /f( +-?\d+)( +-?\d+)( +-?\d+)( +-?\d+)?/;
+
+		// f vertex/uv vertex/uv vertex/uv ...
+
+		var face_pattern2 = /f( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+))?/;
+
+		// f vertex/uv/normal vertex/uv/normal vertex/uv/normal ...
+
+		var face_pattern3 = /f( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))( +(-?\d+)\/(-?\d+)\/(-?\d+))?/;
+
+		// f vertex//normal vertex//normal vertex//normal ... 
+
+		var face_pattern4 = /f( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))( +(-?\d+)\/\/(-?\d+))?/
+
+		//
+
+		var lines = text.split( '\n' );
+
+		for ( var i = 0; i < lines.length; i ++ ) {
+
+			var line = lines[ i ];
+			line = line.trim();
+
+			var result;
+
+			if ( line.length === 0 || line.charAt( 0 ) === '#' ) {
+
+				continue;
+
+			} else if ( ( result = vertex_pattern.exec( line ) ) !== null ) {
+
+				// ["v 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+				vertices.push(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] ),
+					parseFloat( result[ 3 ] )
+				);
+
+			} else if ( ( result = normal_pattern.exec( line ) ) !== null ) {
+
+				// ["vn 1.0 2.0 3.0", "1.0", "2.0", "3.0"]
+
+				normals.push(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] ),
+					parseFloat( result[ 3 ] )
+				);
+
+			} else if ( ( result = uv_pattern.exec( line ) ) !== null ) {
+
+				// ["vt 0.1 0.2", "0.1", "0.2"]
+
+				uvs.push(
+					parseFloat( result[ 1 ] ),
+					parseFloat( result[ 2 ] )
+				);
+
+			} else if ( ( result = face_pattern1.exec( line ) ) !== null ) {
+
+				// ["f 1 2 3", "1", "2", "3", undefined]
+
+				addFace(
+					result[ 1 ], result[ 2 ], result[ 3 ], result[ 4 ]
+				);
+
+			} else if ( ( result = face_pattern2.exec( line ) ) !== null ) {
+
+				// ["f 1/1 2/2 3/3", " 1/1", "1", "1", " 2/2", "2", "2", " 3/3", "3", "3", undefined, undefined, undefined]
+				
+				addFace(
+					result[ 2 ], result[ 5 ], result[ 8 ], result[ 11 ],
+					result[ 3 ], result[ 6 ], result[ 9 ], result[ 12 ]
+				);
+
+			} else if ( ( result = face_pattern3.exec( line ) ) !== null ) {
+
+				// ["f 1/1/1 2/2/2 3/3/3", " 1/1/1", "1", "1", "1", " 2/2/2", "2", "2", "2", " 3/3/3", "3", "3", "3", undefined, undefined, undefined, undefined]
+
+				addFace(
+					result[ 2 ], result[ 6 ], result[ 10 ], result[ 14 ],
+					result[ 3 ], result[ 7 ], result[ 11 ], result[ 15 ],
+					result[ 4 ], result[ 8 ], result[ 12 ], result[ 16 ]
+				);
+
+			} else if ( ( result = face_pattern4.exec( line ) ) !== null ) {
+
+				// ["f 1//1 2//2 3//3", " 1//1", "1", "1", " 2//2", "2", "2", " 3//3", "3", "3", undefined, undefined, undefined]
+
+				addFace(
+					result[ 2 ], result[ 5 ], result[ 8 ], result[ 11 ],
+					undefined, undefined, undefined, undefined,
+					result[ 3 ], result[ 6 ], result[ 9 ], result[ 12 ]
+				);
+
+			} else if ( /^o /.test( line ) ) {
+
+				geometry = {
+					vertices: [],
+					normals: [],
+					uvs: []
+				};
+
+				material = {
+					name: ''
+				};
+
+				object = {
+					name: line.substring( 2 ).trim(),
+					geometry: geometry,
+					material: material
+				};
+
+				objects.push( object )
+
+			} else if ( /^g /.test( line ) ) {
+
+				// group
+
+			} else if ( /^usemtl /.test( line ) ) {
+
+				// material
+
+				material.name = line.substring( 7 ).trim();
+
+			} else if ( /^mtllib /.test( line ) ) {
+
+				// mtl file
+
+			} else if ( /^s /.test( line ) ) {
+
+				// smooth shading
 
 			} else {
 
-				console.warn( 'THREE.OBJExporter.parseMesh(): geometry type unsupported', geometry );
+				// console.log( "THREE.OBJLoader: Unhandled line " + line );
 
 			}
 
-			// update index
-			indexVertex += nbVertex;
-			indexVertexUvs += nbVertexUvs;
-			indexNormals += nbNormals;
+		}
 
-		};
+		var container = new THREE.Object3D();
 
-		var parseLine = function( line ) {
+		for ( var i = 0, l = objects.length; i < l; i ++ ) {
 
-			var nbVertex = 0;
+			var object = objects[ i ];
+			var geometry = object.geometry;
 
-			var geometry = line.geometry;
-			var type = line.type;
+			var buffergeometry = new THREE.BufferGeometry();
 
-			if ( geometry instanceof THREE.Geometry ) {
+			buffergeometry.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array( geometry.vertices ), 3 ) );
 
-				geometry = new THREE.BufferGeometry().setFromObject( line );
-
+			if ( geometry.normals.length > 0 ) {
+				buffergeometry.addAttribute( 'normal', new THREE.BufferAttribute( new Float32Array( geometry.normals ), 3 ) );
 			}
 
-			if ( geometry instanceof THREE.BufferGeometry ) {
-
-				// shortcuts
-				var vertices = geometry.getAttribute( 'position' );
-				var indices = geometry.getIndex();
-
-				// name of the line object
-				output += 'o ' + line.name + '\n';
-
-				if( vertices !== undefined ) {
-
-					for ( i = 0, l = vertices.count; i < l; i ++, nbVertex++ ) {
-
-						vertex.x = vertices.getX( i );
-						vertex.y = vertices.getY( i );
-						vertex.z = vertices.getZ( i );
-
-						// transfrom the vertex to world space
-						vertex.applyMatrix4( line.matrixWorld );
-
-						// transform the vertex to export format
-						output += 'v ' + vertex.x + ' ' + vertex.y + ' ' + vertex.z + '\n';
-
-					}
-
-				}
-
-				if ( type === 'Line' ) {
-
-					output += 'l ';
-
-					for ( j = 1, l = vertices.count; j <= l; j++ ) {
-
-						output += ( indexVertex + j ) + ' ';
-
-					}
-
-					output += '\n';
-
-				}
-
-				if ( type === 'LineSegments' ) {
-
-					for ( j = 1, k = j + 1, l = vertices.count; j < l; j += 2, k = j + 1 ) {
-
-						output += 'l ' + ( indexVertex + j ) + ' ' + ( indexVertex + k ) + '\n';
-
-					}
-
-				}
-
-			} else {
-
-				console.warn('THREE.OBJExporter.parseLine(): geometry type unsupported', geometry );
-
+			if ( geometry.uvs.length > 0 ) {
+				buffergeometry.addAttribute( 'uv', new THREE.BufferAttribute( new Float32Array( geometry.uvs ), 2 ) );
 			}
 
-			// update index
-			indexVertex += nbVertex;
+			var material = new THREE.MeshLambertMaterial();
+			material.name = object.material.name;
 
-		};
+			var mesh = new THREE.Mesh( buffergeometry, material );
+			mesh.name = object.name;
 
-		object.traverse( function ( child ) {
+			container.add( mesh );
 
-			if ( child instanceof THREE.Mesh ) {
+		}
 
-				parseMesh( child );
+		console.timeEnd( 'OBJLoader' );
 
-			}
-
-			if ( child instanceof THREE.Line ) {
-
-				parseLine( child );
-
-			}
-
-		} );
-
-		return output;
+		return container;
 
 	}
 
